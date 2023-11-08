@@ -63,7 +63,7 @@ let upload = multer({
 }).single("file");
 
 
-app.use("/webupload",uploadRouter)
+
 
 app.use("/upload", (req, res) => {
     if (req.method != "POST") {
@@ -151,8 +151,9 @@ app.use("/prvupload", (req, res) => {
         });
     });
 })
-
+// app.use("/",uploadRouter)
 app.get("/", async (req, res) => {
+	uploadRouter
     try {
         let files = fs.readdirSync(filesDir);
         const html = generateFileListHTML(filesDir);

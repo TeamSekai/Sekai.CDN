@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-router.use(express.static("./uploadHtml"))
+router.use(express.static("./html"))
 module.exports = router
 
 router.get('/webupload', function(req, res) {
