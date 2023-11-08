@@ -5,6 +5,7 @@ const app = express();
 const ipRangeCheck = require("ip-range-check");
 const multer = require("multer");
 const generateFileListHTML = require("./genfilelist.js")
+const uploadRouter = require("./uploader.js");
 const config = {
     filesDir: "files",
     port: 8080,
@@ -60,6 +61,9 @@ const storage = multer.diskStorage({
 let upload = multer({
     storage: storage
 }).single("file");
+
+
+app.use("/webupload",uploadRouter)
 
 app.use("/upload", (req, res) => {
     if (req.method != "POST") {
