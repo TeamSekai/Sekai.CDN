@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+<style>
+    html,
+    body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background-color: black;
+    }
+
+    .box {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    .box>svg {
+        background: red;
+    }
+
+    .text-centered {
+        font: bold 100px "Source Code Pro", "consolas", "Menlo", "Courier";
+        fill: #ffffff;
+        text-anchor: middle;
+    }
+</style>
+
+<body>
+    <canvas width="100%" height="100%" id="c"></canvas>
+    <div class="box">
+        <svg height="150px" width="100%">
+            <text class="text-centered" id="kairun" filter="url(#glitch)" x="50%" y="50%" text-anchor="middle"
+                alignment-baseline="middle">
+                ACCESS DENIED
+            </text>
+        </svg>
+    </div>
+
+
+    <svg width="0" height="0">
+        <defs>
+            <filter id="glitch" primitiveUnits="objectBoundingBox" x="-10%" y="0%" width="120%" height="100%">
+                <feColorMatrix in="SourceGraphic" result="red" type="matrix" values="1 0 0 0 0
+                                   0 0 0 0 0
+                                   0 0 0 0 0
+                                   0 0 0 1 0" />
+                <!-- green: G成分 -->
+                <feColorMatrix in="SourceGraphic" result="green" type="matrix" values="0 0 0 0 0
+                                   0 1 0 0 0
+                                   0 0 0 0 0
+                                   0 0 0 1 0" />
+                <!-- blue: B成分 -->
+                <feColorMatrix in="SourceGraphic" result="blue" type="matrix" values="0 0 0 0 0
+                                   0 0 0 0 0
+                                   0 0 1 0 0
+                                   0 0 0 1 0" />
+
+                <!-- red-shifted: R成分を左にずらしたもの -->
+                <feOffset in="red" result="red-shifted" dx="-0.005" dy="0">
+                    <animate attributeName="dx" values="0; -0.005; 0; -0.007; -0.007" keyTimes="0; 0.3; 0.33; 0.7; 0.75"
+                        begin="0s" dur="1s" calcMode="discrete" repeatCount="indefinite" fill="freeze" />
+                </feOffset>
+                <!-- blue-shifted: B成分を右にずらしたもの -->
+                <feOffset in="blue" result="blue-shifted" dx="0.005" dy="0">
+                    <animate attributeName="dx" values="0; 0.005; 0; 0.007; 0.007" keyTimes="0; 0.3; 0.33; 0.7; 0.75"
+                        begin="0s" dur="0.8s" calcMode="discrete" repeatCount="indefinite" fill="freeze" />
+                </feOffset>
+
+                <!-- blended: ブレンド結果 -->
+                <feBlend mode="screen" in="red-shifted" in2="green" result="red-green" />
+                <feBlend mode="screen" in="red-green" in2="blue-shifted" result="blended" />
+
+                <!-- スライスごとに横に動かす -->
+                <feOffset in="blended" dx="0" dy="0" y="0%" height="30%" result="slice1"></feOffset>
+                <feOffset in="blended" dx="0" dy="0" y="30%" height="10%" result="slice2">
+                    <animate attributeName="dx" values="0; -0.005; 0; -0.01" keyTimes="0; 0.3; 0.33; 0.7" begin="0s"
+                        dur="0.6s" calcMode="discrete" repeatCount="indefinite" fill="freeze" />
+                </feOffset>
+                <feOffset in="blended" dx="0" dy="0" y="40%" height="10%" result="slice3"></feOffset>
+                <feOffset in="blended" dx="0" dy="0" y="50%" height="2%" result="slice4">
+                    <animate attributeName="dx" values="0; 0.01; 0; 0.01; 0.02" keyTimes="0; 0.3; 0.33; 0.7; 0.75"
+                        begin="0s" dur="0.3s" calcMode="discrete" repeatCount="indefinite" fill="freeze" />
+                </feOffset>
+                <feOffset in="blended" dx="0" dy="0" y="52%" height="12%" result="slice5"></feOffset>
+                <feOffset in="blended" dx="0" dy="0" y="64%" height="3%" result="slice6">
+                    <animate attributeName="dx" values="0; -0.005; 0; -0.01; -0.015; -0.01; -0.015; -0.01; -0.015"
+                        keyTimes="0; 0.3; 0.33; 0.8; 0.82; 0.84; 0.86; 0.88; 0.9" begin="0s" dur="0.7s"
+                        calcMode="discrete" repeatCount="indefinite" fill="freeze" />
+                </feOffset>
+                <feOffset in="blended" dx="0" dy="0" y="67%" height="33%" result="slice7"></feOffset>
+
+                <!-- スライスをマージ -->
+                <feMerge>
+                    <feMergeNode in="slice1" />
+                    <feMergeNode in="slice2" />
+                    <feMergeNode in="slice3" />
+                    <feMergeNode in="slice4" />
+                    <feMergeNode in="slice5" />
+                    <feMergeNode in="slice6" />
+                    <feMergeNode in="slice7" />
+                </feMerge>
+            </filter>
+        </defs>
+    </svg>
+
+    <script>
+        let elem = document.getElementById("kairun");
+        setInterval(() => {
+            elem.style.transform = `translateX(${Math.random() * 5 - 2.5}px)`;
+        }, 10);
+
+
+        var c = document.getElementById("c");
+        c.height = window.innerHeight;
+        c.width = window.innerWidth;
+        var drop_size = 10;
+        var columns = c.width / drop_size;
+
+        var chinese = "かいるん";
+        chinese = chinese.split("");
+
+        var drops = [];
+        for (var i = 0; i < columns; i++)
+            drops[i] = 1;
+
+        ctx = c.getContext('2d');
+
+        function draw() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+            ctx.fillRect(0, 0, c.width, c.height);
+
+            ctx.fillStyle = "#0d0";
+            ctx.font = drop_size + "px arial";
+            for (var i = 0; i < drops.length; i++) {
+                text = chinese[Math.floor(Math.random() * chinese.length)];
+                ctx.fillText(text, i * drop_size, drops[i] * drop_size);
+
+                if (drops[i] * drop_size > c.height && Math.random() > 0.975)
+                    drops[i] = 0;
+
+                drops[i]++;
+            }
+        }
+        setInterval(draw, 33);
+        document.body.onresize = () => {
+            c.height = window.innerHeight;
+            c.width = window.innerWidth;
+        }
+    </script>
+</body>
+
+</html>
