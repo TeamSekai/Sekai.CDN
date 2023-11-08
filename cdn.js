@@ -4,6 +4,7 @@ const fs = require("fs");
 const app = express();
 const ipRangeCheck = require("ip-range-check");
 const multer = require("multer");
+const generateFileListHTML = require("./genfilelist.js")
 const config = {
     filesDir: "files",
     port: 8080,
@@ -150,15 +151,7 @@ app.use("/prvupload", (req, res) => {
 app.get("/", async (req, res) => {
     try {
         let files = fs.readdirSync(filesDir);
-        const fileList = files.map(file => {
-            const fileStat = fs.statSync(path.join(filesDir, file));
-            return {
-                name: file,
-                isDirectory: fileStat.isDirectory(),
-                size: formatFileSize(fileStat.size)
-            };
-        });
-        const html = generateFileListHTML(fileList);
+        const html = generateFileListHTML(filesDir);
         res.send(html);
     } catch (err) {
         console.error(err);
@@ -166,27 +159,6 @@ app.get("/", async (req, res) => {
     }
 })
 
-function generateFileListHTML(files) {
-    const listItems = files.map(file => {
-        const itemName = file.isDirectory ? `${file.name}/` : file.name;
-        return `<li><a href="${itemName}">${itemName}</a> (${file.size} bytes)</li>`;
-    });
-
-    return `
-	  <!DOCTYPE html>
-	  <html>
-	  <head>
-		<title>File List</title>
-	  </head>
-	  <body>
-		<h1>File List</h1>
-		<ul>
-		  ${listItems.join('')}
-		</ul>
-	  </body>
-	  </html>
-	`;
-}
 
 app.get("/private/:filename", (req, res) => {
 	const filename = req.params.filename;
