@@ -9,12 +9,21 @@ app.use((req, res, next) => {
     const now = new Date();
     const clientIP = req.ip; // クライアントのIPを取得
     const requestInfo = `${req.method} ${decodeURIComponent(req.originalUrl)}`; // リクエストのメソッドとURL
+	const userAgent = req.headers['user-agent'];
+	console.log(userAgent)
     console.log(`[${now.toLocaleString()}] - Client IP: ${clientIP}, Request: ${requestInfo}`);
+	let logPath = path.join(__dirname, "access.log");
+	if (!fs.existsSync(logPath))
+		fs.writeFileSync(logPath, "CDN Access log\n");
+	fs.appendFileSync(logPath, `[${now.toLocaleString()}] - Client IP: ${clientIP}, Request: ${requestInfo}, UA: ${userAgent}\n`)
+
     next();
 });
 
 
+
 app.use("/", require("./Routes"))
+
 
 
 app.get("/private/:filename", (req, res) => {

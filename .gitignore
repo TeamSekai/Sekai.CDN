@@ -1,3 +1,7 @@
+#ignore pls
+files/*
+access.log
+
 # Logs
 logs
 *.log
