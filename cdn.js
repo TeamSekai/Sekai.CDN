@@ -8,6 +8,26 @@ const config = require("./config.js");
 const filesDir = path.resolve(__dirname, config.filesDir);
 const prvDir = path.resolve(__dirname, config.prvDir);
 
+
+function unicodeEscape(str) {
+	if (!String.prototype.repeat) {
+		String.prototype.repeat = function (digit) {
+			var result = '';
+			for (var i = 0; i < Number(digit); i++) result += str;
+			return result;
+		};
+	}
+
+	var strs = str.split(''), hex, result = '';
+
+	for (var i = 0, len = strs.length; i < len; i++) {
+		hex = strs[i].charCodeAt(0).toString(16);
+		result += '\\u' + ('0'.repeat(Math.abs(hex.length - 4))) + hex;
+	}
+
+	return result;
+};
+
 app.set('trust proxy', 'uniquelocal')
 app.use((req, res, next) => {
     const now = new Date();
@@ -128,7 +148,56 @@ app.use("/prvupload", (req, res) => {
     });
 })
 
+app.use("/oembed/:filename", (req, res) => {
+	console.log("loading...")
+    const filename = req.params.filename;
+    const filePath = path.join(filesDir, filename);
+
+    // ファイルが存在するかを確認
+	console.log(`dev: ${filename}, ${filePath}`)
+    if (fs.existsSync(filePath)) {
+        // const fileUrl = `${filename}`;
+		// console.log(fileUrl)
+
+        // ファイルが存在する場合、JSON形式でファイル名とURLを返す
+		/*
+        res.json({
+            fileName: filename,
+            fileUrl: fileUrl
+        });
+		*/
+		res.json({
+			"version": "1.0",
+			// "title": `${link.url}`,
+			"title": `${filename}`,
+			"type": "video",
+			"provider_name": "SimpleCDN",
+			"provider_url": "https://cdn.mcsv.life",
+			"url": `https://cdn.mcsv.life/${filename}`,
+			"width": 1280,
+			"height": 720
+		});
+    } else {
+        // ファイルが存在しない場合、404エラーを返す
+        res.status(404).json({
+            error: "File not found"
+        });
+    }
+});
+
+app.get("/:filename", async (req, res) => {
+
+	const filename = req.params.filename;
+	if (!filename) {
+		return res.status(404).sendFile(path.join(__dirname, 'assets', '404.png'));
+	}
+	res.send(
+		`<link rel="alternate" type="application/json+oembed" href="https://cdn.mcsv.life/oembed/${filename}" />`
+	)
+});
+
 app.use("/", require("./Routes"))
+
 
 
 app.get("/private/:filename", (req, res) => {

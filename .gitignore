@@ -1,3 +1,6 @@
+#ignore pls
+files/*
+
 # Logs
 logs
 *.log
