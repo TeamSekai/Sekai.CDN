@@ -8,32 +8,19 @@ const config = require("./config.js");
 const filesDir = path.resolve(__dirname, config.filesDir);
 const prvDir = path.resolve(__dirname, config.prvDir);
 
-
-function unicodeEscape(str) {
-	if (!String.prototype.repeat) {
-		String.prototype.repeat = function (digit) {
-			var result = '';
-			for (var i = 0; i < Number(digit); i++) result += str;
-			return result;
-		};
-	}
-
-	var strs = str.split(''), hex, result = '';
-
-	for (var i = 0, len = strs.length; i < len; i++) {
-		hex = strs[i].charCodeAt(0).toString(16);
-		result += '\\u' + ('0'.repeat(Math.abs(hex.length - 4))) + hex;
-	}
-
-	return result;
-};
-
 app.set('trust proxy', 'uniquelocal')
 app.use((req, res, next) => {
     const now = new Date();
     const clientIP = req.ip; // クライアントのIPを取得
     const requestInfo = `${req.method} ${decodeURIComponent(req.originalUrl)}`; // リクエストのメソッドとURL
+	const userAgent = req.headers['user-agent'];
+	console.log(userAgent)
     console.log(`[${now.toLocaleString()}] - Client IP: ${clientIP}, Request: ${requestInfo}`);
+	let logPath = path.join(__dirname, "access.log");
+	if (!fs.existsSync(logPath))
+		fs.writeFileSync(logPath, "CDN Access log\n");
+	fs.appendFileSync(logPath, `[${now.toLocaleString()}] - Client IP: ${clientIP}, Request: ${requestInfo}, UA: ${userAgent}\n`)
+
     next();
 });
 
