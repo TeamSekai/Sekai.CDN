@@ -1,7 +1,6 @@
 #ignore pls
 files/*
 access.log
-config.js
 
 # Logs
 logs
