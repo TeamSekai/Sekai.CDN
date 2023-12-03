@@ -1,3 +1,29 @@
+async function upload() {
+    try {
+        let files = await window.showOpenFilePicker();
+        /** @type {File} */
+        let file = await files[0].getFile();
+        if (!window.confirm(`${file.name} をアップロードしますか？`)) return;
+        let formData = new FormData();
+        formData.append("file", file);
+        let params = new URLSearchParams({
+            path: location.pathname
+        });
+        let res = await fetch("/api/upload?" + params, {
+            method: "POST",
+            body: formData
+        });
+        if (res.status == 200) {
+            let json = await res.json();
+            alert(`アップロードしました: ${json.fileName}`);
+            return location.reload();
+        }
+        else if (res.status == 401)
+            return alert("ログインに失敗しました");
+        else
+            return alert(`不明なエラー: ${res.status} ${res.statusText}`);
+    } catch { }
+}
 (async function () {
     try {
         let files = await (await fetch("/api/files" + location.pathname)).json();
@@ -14,7 +40,8 @@
             filesElem.appendChild(elem);
         });
         document.getElementById("loading").remove();
-    } catch {
+    } catch (e) {
+        console.error(e)
         document.getElementById("loading").innerText = "404 Not Found";
     }
 })();
