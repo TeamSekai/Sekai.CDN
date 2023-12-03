@@ -1,4 +1,6 @@
+console.log("loaded..")
 async function upload() {
+	console.log("trying..")
     try {
         let files = await window.showOpenFilePicker();
         /** @type {File} */
@@ -22,7 +24,7 @@ async function upload() {
             return alert("ログインに失敗しました");
         else
             return alert(`不明なエラー: ${res.status} ${res.statusText}`);
-    } catch { }
+    } catch { console.error("Failed") }
 }
 (async function () {
     try {
