@@ -88,10 +88,22 @@ passport.use(new passportHttp.BasicStrategy(
     }
 ));
 
+function str2bool(str) {
+    if (typeof str != 'string') {
+        return Boolean(str);
+    }
+    try {
+        var obj = JSON.parse(str.toLowerCase());
+        return obj == true;
+    } catch (e) {
+        return str != '';
+    }
+}
+
 router.post("/upload-discord", async (req, res) => {
     let file = req.files.file;
     if (!file) return res.status(400);
-    let uploadDir = ('private' in req.query) ? prvDir : filesDir;
+    let uploadDir = str2bool[req.query["private"]] ? prvDir : filesDir;
     if (!fs.existsSync(uploadDir)) return res.sendStatus(404);
     let check = ipRangeCheck(req.ip, [
         "127.0.0.1/8",//ループバックアドレス
