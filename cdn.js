@@ -22,8 +22,7 @@ app.use((req, res, next) => {
 
 app.get("/private/:filename", (req, res) => {
     const filename = req.params.filename;
-    const prvDir = config.prvDir
-    const filePath = path.join(__dirname, prvDir, filename);
+    const filePath = path.join(__dirname, 'private', filename);
 
     // ファイルが存在するかを確認
     if (fs.existsSync(filePath)) {
