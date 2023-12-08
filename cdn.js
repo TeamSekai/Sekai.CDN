@@ -20,12 +20,6 @@ app.use((req, res, next) => {
     next();
 });
 
-
-
-app.use("/", require("./Routes"))
-
-
-
 app.get("/private/:filename", (req, res) => {
     const filename = req.params.filename;
     const filePath = path.join(prvDir, filename);
@@ -38,6 +32,8 @@ app.get("/private/:filename", (req, res) => {
         res.status(404).sendFile(path.join(__dirname, 'assets', '404.png'));
     }
 });
+
+app.use("/", require("./Routes"))
 
 app.use((req, res, next) => {
     res.status(404).sendFile(path.join(__dirname, 'assets', '404.png'));
