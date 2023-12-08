@@ -22,11 +22,11 @@ app.use((req, res, next) => {
 
 app.get("/private/:filename", (req, res) => {
     const filename = req.params.filename;
-    const filePath = path.join(__dirname, 'private', filename);
+    const filePath = path.resolve(__dirname, 'private', filename);
 
     // ファイルが存在するかを確認
     if (fs.existsSync(filePath)) {
-        res.sendFile(filePath);
+        res.sendFile(filePath, { root: '/' });
     } else {
         // ファイルが存在しない場合、404エラーを送信
         res.status(404).sendFile(path.join(__dirname, 'assets', '404.png'));
