@@ -103,7 +103,7 @@ function str2bool(str) {
 router.post("/upload-discord", async (req, res) => {
     let file = req.files.file;
     if (!file) return res.status(400);
-    let uploadDir = str2bool[req.query["private"]] ? prvDir : filesDir;
+    let uploadDir = str2bool(req.query["private"]) ? prvDir : filesDir;
     if (!fs.existsSync(uploadDir)) return res.sendStatus(404);
     let check = ipRangeCheck(req.ip, [
         "127.0.0.1/8",//ループバックアドレス
