@@ -1,6 +1,7 @@
 #ignore pls
 files/*
 !files/kairun.wav
+private/*
 access.log
 
 # Logs
