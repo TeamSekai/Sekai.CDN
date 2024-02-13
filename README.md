@@ -8,5 +8,7 @@ Let's make CDN yourself!
 3. edit `config.json` (copy `config.json.example` as `config.json`)
 4. run server (`$node cdn`)
 
+Done! default port is 8080. you can view page on `http://localhost:8080`.
+
 # Cache files w/Cloudflare
 Soon
