@@ -4,5 +4,6 @@
     "port": 8080,
     "trustedIPs": [],
     "uploadUserName": "admin",
-    "uploadPassword": "password"
+    "uploadPassword": "password",
+    "useXffHeader": false
 }
