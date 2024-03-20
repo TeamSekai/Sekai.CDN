@@ -5,5 +5,6 @@ module.exports = {
     trustedIPs: [],
     uploadUserName: "admin",
     uploadPassword: "password",
+    useXffHeader: false,
     ...require("./config.json")
 };

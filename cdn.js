@@ -7,7 +7,7 @@ const config = require("./config.js");
 app.set('trust proxy', 'uniquelocal')
 app.use((req, res, next) => {
     const now = new Date();
-    const clientIP = req.ip; // クライアントのIPを取得
+    const clientIP = config.useXffHeader ? req.headers['x-forwarded-for'] : req.ip; // クライアントのIPを取得
     const requestInfo = `${req.method} ${decodeURIComponent(req.originalUrl)}`; // リクエストのメソッドとURL
 	const userAgent = req.headers['user-agent'];
 	console.log(userAgent)
