@@ -104,6 +104,11 @@ paths:
                   fileName:
                     type: string
                     description: The basename of the uploaded file.
+              examples:
+                example:
+                  value: {
+                    "fileName": "example.png"
+                  }
         400:
           description: The file is not specified.
         403:
@@ -122,6 +127,12 @@ paths:
                   error:
                     type: string
                     description: Error description
+              examples:
+                example:
+                  value: {
+                    "success": false,
+                    "error": Failed to Upload
+                  }
 
   /api/upload:
     post:
@@ -158,6 +169,11 @@ paths:
                   fileName:
                     type: string
                     description: The basename of the uploaded file.
+              examples:
+                example:
+                  value: {
+                    "fileName": "example.png"
+                  }
         400:
           description: The path or file is not specified.
         404:
