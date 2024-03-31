@@ -1,10 +1,15 @@
 const fs = require("fs");
 const path = require("path");
 const express = require("express");
+const swaggerUi = require("swagger-ui-express");
+const YAML = require("yaml");
 const router = express.Router();
 const config = require("../config.js");
 const send = require("send");
 const filesDir = path.resolve(__dirname, "../", config.filesDir);
+
+const swaggerDoc = YAML.parse(fs.readFileSync(path.join(__dirname, "../", "docs", "openapi.yml"), "utf8"));
+router.use("/api-doc", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
 router.use("/api", require("./api"))
 
