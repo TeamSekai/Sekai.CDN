@@ -1,0 +1,158 @@
+openapi: '3.1.0'
+
+info:
+  title: SimpleCDN API
+  version: '0.1'
+
+tags:
+  - name: API
+
+paths:
+
+  /api/files/{path}:
+    get:
+      description: Gets a list of files in a directory.
+      tags:
+        - API
+      parameters:
+        - name: path
+          description: The path to the directory
+          in: path
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: The file list.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    directory:
+                      type: boolean
+                      description: Whether the entry is a directory
+                    file:
+                      type: boolean
+                      description: Whether the entry is a file
+                    name:
+                      type: string
+                      description: The name of the entry
+                    size:
+                      type: number
+                      description: The size of the entry in bytes
+                    sizeStr:
+                      type: string
+                      description: Human-readable representation of the size
+              examples:
+                example:
+                  value: [
+                    {
+                      "directory": true,
+                      "file": false,
+                      "name": "dir",
+                      "size": 4096,
+                      "sizeStr": "4.00 KB"
+                    },
+                    {
+                      "directory": false,
+                      "file": true,
+                      "name": "example.png",
+                      "size": 50136,
+                      "sizeStr": "48.96 KB"
+                    }
+                  ]
+
+  /api/upload-discord:
+    post:
+      description: Uploads a file.
+      tags:
+        - API
+      parameters:
+        - name: private
+          description: Whether to hide the file from the file list
+          in: query
+          required: false
+          schema:
+            type: boolean
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  description: The file to upload
+                  format: binary
+      responses:
+        200:
+          description: Succeeded to upload.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  fileName:
+                    type: string
+                    description: The basename of the uploaded file.
+        400:
+          description: The file is not specified.
+        403:
+          description: The client IP is not trusted.
+        500:
+          description: Failed to upload.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: string
+                    description: Error description
+
+  /api/upload:
+    post:
+      description: Uploads a file with Basic authentication.
+      tags:
+        - API
+      parameters:
+        - name: path
+          description: The path of the directory to upload.
+          in: query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  description: The file to upload
+                  format: binary
+      responses:
+        200:
+          description: Succeeded to upload.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  fileName:
+                    type: string
+                    description: The basename of the uploaded file.
+        400:
+          description: The path or file is not specified.
+        404:
+          description: The directory does not exist.
+        500:
+          description: Failed to upload.
