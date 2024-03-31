@@ -7,6 +7,12 @@ info:
 tags:
   - name: API
 
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+
 paths:
 
   /api/files/{path}:
@@ -122,6 +128,8 @@ paths:
       description: Uploads a file with Basic authentication.
       tags:
         - API
+      security:
+        - basicAuth: []
       parameters:
         - name: path
           description: The path of the directory to upload.
