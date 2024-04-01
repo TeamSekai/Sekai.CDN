@@ -4,7 +4,7 @@ import express from "express";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yaml";
 const router = express.Router();
-import config from "../config.js";
+import { config } from "@packages/common";
 import apiRouter from "./api/index.js";
 import { handler as astroHandler } from "@packages/astro";
 import send from "send";

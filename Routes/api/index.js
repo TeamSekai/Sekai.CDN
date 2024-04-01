@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import express from "express";
 let router = express.Router();
-import config from "../../config.js";
+import { config } from "@packages/common";
 const filesDir = path.resolve(import.meta.dirname, "../../", config.filesDir);
 const prvDir = path.resolve(import.meta.dirname, "../../", config.prvDir);
 import passport from 'passport';
