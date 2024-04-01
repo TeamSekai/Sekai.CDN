@@ -1,14 +1,14 @@
-const fs = require("fs");
-const path = require("path");
-const express = require("express");
+import fs from "fs";
+import path from "path";
+import express from "express";
 let router = express.Router();
-const config = require("../../config.js");
-const filesDir = path.resolve(__dirname, "../../", config.filesDir);
-const prvDir = path.resolve(__dirname, "../../", config.prvDir);
-const passport = require('passport');
-const passportHttp = require('passport-http');
-const fileUpload = require("express-fileupload");
-const ipRangeCheck = require("ip-range-check");
+import config from "../../config.js";
+const filesDir = path.resolve(import.meta.dirname, "../../", config.filesDir);
+const prvDir = path.resolve(import.meta.dirname, "../../", config.prvDir);
+import passport from 'passport';
+import passportHttp from 'passport-http';
+import fileUpload from "express-fileupload";
+import ipRangeCheck from "ip-range-check";
 
 router.use(fileUpload({
 
@@ -146,4 +146,4 @@ router.post("/upload", passport.authenticate('basic', { session: false }), async
 })
 
 
-module.exports = router
+export default router
