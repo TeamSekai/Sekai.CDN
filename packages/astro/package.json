@@ -3,6 +3,7 @@
   "license": "MIT",
   "version": "0.0.1",
   "type": "module",
+  "main": "dist/server/entry.mjs",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",

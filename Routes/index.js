@@ -6,6 +6,7 @@ import YAML from "yaml";
 const router = express.Router();
 import config from "../config.js";
 import apiRouter from "./api/index.js";
+import { handler as astroHandler } from "@packages/astro";
 import send from "send";
 const filesDir = path.resolve(import.meta.dirname, "../", config.filesDir);
 
@@ -20,8 +21,8 @@ router.get('/webupload', function (req, res) {
 
 router.use(express.static(path.join(import.meta.dirname, "../", "files")))
 
-router.use("/static", express.static(path.join(import.meta.dirname, "../", "html")))
-
+router.use("/", express.static(path.join(import.meta.dirname, "../", "packages", "astro", "dist", "client")));
+router.use(astroHandler);
 
 router.use((req, res, next) => {
     if (req.method != "GET") return next();
