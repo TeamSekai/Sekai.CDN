@@ -16,3 +16,5 @@ export const config = {
         )
     )
 };
+
+export * from "./files.js";
