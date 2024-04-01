@@ -1,3 +1,22 @@
+---
+import { DirectoryEntry, getDirectoryEntries } from "@packages/common";
+
+const dirPath: string = Astro.params.path ?? '';
+let files: DirectoryEntry[] | null = null;
+let parentDir: string | null = null;
+
+try {
+    files = await getDirectoryEntries(dirPath);
+    const pathDirs = dirPath.split("/");
+    const length = pathDirs.length;
+    if (length > 0 && pathDirs[0].length > 0) {
+        parentDir = "/" + pathDirs.slice(0, length - 1).join("/");
+    }
+} catch (e) {
+    console.error(e)
+}
+---
+
 <!DOCTYPE html>
 <html lang=ja">
 
@@ -11,10 +30,14 @@
   <center>
     <h1>CDN File list</h1>
     <hr>
-    <p id="loading">ファイル一覧を読み込み中...</p>
+    {(files == null) && <p>404 Not Found</p>}
     <button onclick="upload()">アップロード(ログインが必要です)</button>
   </center>
   <ul id="files">
+    {(parentDir != null) && <li><a href={parentDir}>..</a></li>}
+    {files?.map((file) => <li>
+        <a href={file.name}>{file.name}</a> ({file.directory ? "ディレクトリ" : file.sizeStr})
+    </li>)}
   </ul>
   <script>
     function showOpenFilePickerPolyfill(options = {}) {
@@ -72,27 +95,6 @@
                 return alert(`不明なエラー: ${res.status} ${res.statusText}`);
         } catch { console.error("Failed") }
     }
-    (async function () {
-        try {
-            let files = await (await fetch("/api/files" + location.pathname)).json();
-            let filesElem = document.getElementById("files");
-            let path = location.pathname.slice(1).split("/").filter(x => !!x);
-            if (path.length > 0) {
-                let elem = document.createElement("li");
-                elem.innerHTML = `<a href="/${path.slice(1).join("/")}">../</a>`;
-                filesElem.appendChild(elem);
-            }
-            files.forEach(file => {
-                let elem = document.createElement("li");
-                elem.innerHTML = `<a href="${file.name}">${file.name}</a> (${file.directory ? "ディレクトリ" : file.sizeStr})`;
-                filesElem.appendChild(elem);
-            });
-            document.getElementById("loading").remove();
-        } catch (e) {
-            console.error(e)
-            document.getElementById("loading").innerText = "404 Not Found";
-        }
-    })();
   </script>
 </body>
 

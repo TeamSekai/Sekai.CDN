@@ -17,9 +17,8 @@ router.use(fileUpload({
 router.use(async (req, res, next) => {
     if (req.method != "GET") return next();
     if (req.path.startsWith("/api/files")) return next();
-    let folderPath = path.join(filesDir, decodeURIComponent(req.path).slice(1).split("/").slice(1).join("/"));
     try {
-        res.json(await getDirectoryEntries(folderPath));
+        res.json(await getDirectoryEntries(decodeURIComponent(req.path).slice(1).split("/").slice(1).join("/")));
     } catch (e) {
         res.sendStatus(404);
     }

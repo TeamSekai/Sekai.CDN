@@ -1,5 +1,14 @@
 import fs from "fs/promises";
 import path from "path";
+import { config } from "./config.js";
+
+export interface DirectoryEntry {
+    directory: boolean;
+    file: boolean;
+    name: string;
+    size: number;
+    sizeStr: string;
+}
 
 function formatFileSize(bytes: number) {
     const kilobyte = 1024;
@@ -18,13 +27,14 @@ function formatFileSize(bytes: number) {
 }
 
 export async function getDirectoryEntries(dir: string) {
-    let stat = await fs.stat(dir)
+    const absolutePath = path.join(config.filesDir, dir);
+    let stat = await fs.stat(absolutePath);
     if (!stat.isDirectory()) {
-        throw new TypeError(`'${dir}' is not a directory`);
+        throw new TypeError(`'${absolutePath}' is not a directory`);
     }
-    const files = await fs.readdir(dir);
+    const files = await fs.readdir(absolutePath);
     return await Promise.all(files.map(async (file) => {
-        let stat = await fs.stat(path.join(dir, file));
+        let stat = await fs.stat(path.join(absolutePath, file));
         return {
             directory: stat.isDirectory(),
             file: stat.isFile(),
