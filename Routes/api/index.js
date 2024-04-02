@@ -102,7 +102,7 @@ router.post("/upload-discord", async (req, res) => {
 
 router.post("/upload", passport.authenticate('basic', { session: false }), async (req, res) => {
     if (!req.query.path) return res.status(400);
-    let file = req.files.file;
+    let file = req.files?.file;
     if (!file) return res.status(400);
     let uploadDir = path.join(filesDir, decodeURIComponent(req.query.path));
     if (!fs.existsSync(uploadDir)) return res.sendStatus(404);

@@ -31,7 +31,7 @@ try {
     <h1>CDN File list</h1>
     <hr>
     {(files == null) && <p>404 Not Found</p>}
-    <button onclick="upload()">アップロード(ログインが必要です)</button>
+    <button id="upload-button">アップロード(ログインが必要です)</button>
   </center>
   <ul id="files">
     {(parentDir != null) && <li><a href={parentDir}>..</a></li>}
@@ -40,16 +40,11 @@ try {
     </li>)}
   </ul>
   <script>
-    function showOpenFilePickerPolyfill(options = {}) {
+    function showOpenFilePickerPolyfill() {
         return new Promise((resolve) => {
             const input = document.createElement("input");
             input.type = "file";
-            input.multiple = options.multiple || false;
-            if (options.types)
-                input.accept = options.types
-                    .map((type) => type.accept)
-                    .flatMap((inst) => Object.keys(inst).flatMap((key) => inst[key]))
-                    .join(",");
+            input.multiple = false;
 
             input.addEventListener("change", () => {
                 resolve(
@@ -72,8 +67,7 @@ try {
         console.log("trying..")
         try {
             let files = await showOpenFilePickerPolyfill();
-            /** @type {File} */
-            let file = await files[0].getFile();
+            let file: File = await files[0].getFile();
             if (!window.confirm(`${file.name} をアップロードしますか？`)) return;
             let formData = new FormData();
             formData.append("file", file);
@@ -95,6 +89,8 @@ try {
                 return alert(`不明なエラー: ${res.status} ${res.statusText}`);
         } catch { console.error("Failed") }
     }
+
+    document.getElementById("upload-button").addEventListener("click", upload);
   </script>
 </body>
 
