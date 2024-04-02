@@ -19,14 +19,7 @@ router.get('/webupload', function (req, res) {
     res.status(200).send('HELLO')
 })
 
-router.use(express.static(path.join(import.meta.dirname, "../", "files")))
-
 router.use("/", express.static(path.join(import.meta.dirname, "../", "packages", "astro", "dist", "client")));
 router.use(astroHandler);
-
-router.use((req, res, next) => {
-    if (req.method != "GET") return next();
-    res.send(fs.readFileSync(path.join(import.meta.dirname, "../", "html", "index.html"), "utf8"))
-})
 
 export default router

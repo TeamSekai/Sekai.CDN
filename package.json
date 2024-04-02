@@ -7,7 +7,7 @@
     "packages/common"
   ],
   "scripts": {
-    "build": "yarn build:common & yarn build:astro",
+    "build": "yarn build:common && yarn build:astro",
     "build:astro": "yarn workspace @packages/astro build",
     "build:common": "yarn workspace @packages/common build"
   },

@@ -1,5 +1,5 @@
 ---
-import { DirectoryEntry, getDirectoryEntries } from "@packages/common";
+import { type DirectoryEntry, getDirectoryEntries } from "@packages/common";
 
 const dirPath: string = Astro.params.path ?? '';
 let files: DirectoryEntry[] | null = null;
