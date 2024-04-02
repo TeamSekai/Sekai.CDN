@@ -1,12 +1,12 @@
 import express from "express";
 import path from "path";
-import fs from "fs";
+import fs from "fs/promises";
 const app = express();
 import { config } from "@packages/common";
 import router from "./Routes/index.js";
 
 app.set('trust proxy', 'uniquelocal')
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
     const now = new Date();
     const clientIP = config.useXffHeader ? req.headers['x-forwarded-for'] : req.ip; // クライアントのIPを取得
     const requestInfo = `${req.method} ${decodeURIComponent(req.originalUrl)}`; // リクエストのメソッドとURL
@@ -14,19 +14,17 @@ app.use((req, res, next) => {
 	console.log(userAgent)
     console.log(`[${now.toLocaleString()}] - Client IP: ${clientIP}, Request: ${requestInfo}`);
 	let logPath = path.join(import.meta.dirname, "access.log");
-	if (!fs.existsSync(logPath))
-		fs.writeFileSync(logPath, "CDN Access log\n");
-	fs.appendFileSync(logPath, `[${now.toLocaleString()}] - Client IP: ${clientIP}, Request: ${requestInfo}, UA: ${userAgent}\n`)
+	await fs.appendFile(logPath, `[${now.toLocaleString()}] - Client IP: ${clientIP}, Request: ${requestInfo}, UA: ${userAgent}\n`)
 
     next();
 });
 
-app.get("/private/:filename", (req, res) => {
+app.get("/private/:filename", async (req, res) => {
     const filename = req.params.filename;
     const filePath = path.resolve(import.meta.dirname, 'private', filename);
 
     // ファイルが存在するかを確認
-    if (fs.existsSync(filePath)) {
+    if (await fs.access(filePath, fs.constants.R_OK)) {
         res.sendFile(filePath, { root: '/' });
     } else {
         // ファイルが存在しない場合、404エラーを送信

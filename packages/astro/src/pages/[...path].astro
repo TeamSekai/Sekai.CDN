@@ -24,6 +24,7 @@ try {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SimpleCDN</title>
+  <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body>
@@ -32,6 +33,7 @@ try {
     <hr>
     {(files == null) && <p>404 Not Found</p>}
     <button id="upload-button">アップロード(ログインが必要です)</button>
+    <input id="file-input" type="file">
   </center>
   <ul id="files">
     {(parentDir != null) && <li><a href={parentDir}>..</a></li>}
@@ -40,57 +42,34 @@ try {
     </li>)}
   </ul>
   <script>
-    function showOpenFilePickerPolyfill() {
-        return new Promise((resolve) => {
-            const input = document.createElement("input");
-            input.type = "file";
-            input.multiple = false;
-
-            input.addEventListener("change", () => {
-                resolve(
-                    [...input.files].map((file) => {
-                        return {
-                            getFile: async () =>
-                                new Promise((resolve) => {
-                                    resolve(file);
-                                }),
-                        };
-                    })
-                );
-            });
-
-            input.click();
+    const fileInput = document.getElementById("file-input") as HTMLInputElement;
+    fileInput.addEventListener("change", async () => {
+        const file = fileInput.files[0];
+        if (!window.confirm(`${file.name} をアップロードしますか？`)) return;
+        let formData = new FormData();
+        formData.append("file", file);
+        let params = new URLSearchParams({
+            path: location.pathname
         });
-    }
+        let res = await fetch("/api/upload?" + params, {
+            method: "POST",
+            body: formData
+        });
+        if (res.status == 200) {
+            let json = await res.json();
+            alert(`アップロードしました: ${json.fileName}`);
+            return location.reload();
+        }
+        else if (res.status == 401)
+            return alert("ログインに失敗しました");
+        else
+            return alert(`不明なエラー: ${res.status} ${res.statusText}`);
+    })
 
-    async function upload() {
+    document.getElementById("upload-button").addEventListener("click", () => {
         console.log("trying..")
-        try {
-            let files = await showOpenFilePickerPolyfill();
-            let file: File = await files[0].getFile();
-            if (!window.confirm(`${file.name} をアップロードしますか？`)) return;
-            let formData = new FormData();
-            formData.append("file", file);
-            let params = new URLSearchParams({
-                path: location.pathname
-            });
-            let res = await fetch("/api/upload?" + params, {
-                method: "POST",
-                body: formData
-            });
-            if (res.status == 200) {
-                let json = await res.json();
-                alert(`アップロードしました: ${json.fileName}`);
-                return location.reload();
-            }
-            else if (res.status == 401)
-                return alert("ログインに失敗しました");
-            else
-                return alert(`不明なエラー: ${res.status} ${res.statusText}`);
-        } catch { console.error("Failed") }
-    }
-
-    document.getElementById("upload-button").addEventListener("click", upload);
+        fileInput.click();
+    });
   </script>
 </body>
 

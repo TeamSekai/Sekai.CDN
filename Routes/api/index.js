@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "fs/promises";
 import path from "path";
 import express from "express";
 let router = express.Router();
@@ -10,9 +10,11 @@ import passportHttp from 'passport-http';
 import fileUpload from "express-fileupload";
 import ipRangeCheck from "ip-range-check";
 
-router.use(fileUpload({
+router.use((req, res, next) => {
+    next();
+})
 
-}));
+router.use('/', fileUpload());
 
 router.use(async (req, res, next) => {
     if (req.method != "GET") return next();
@@ -24,12 +26,16 @@ router.use(async (req, res, next) => {
     }
 })
 
+/**
+ * @param {fileUpload.UploadedFile} file 
+ * @param {string} uploadDir 
+ */
 function uploadFile(file, uploadDir) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         let filePath = path.join(uploadDir, file.name);
         let extName = path.extname(file.name);
         let baseName = path.basename(file.name, extName);
-        let files = fs.readdirSync(uploadDir);
+        let files = await fs.readdir(uploadDir);
         let newFileName = file.name;
         let count = 1;
         while (files.includes(newFileName)) {
@@ -37,15 +43,14 @@ function uploadFile(file, uploadDir) {
             count++;
         }
         filePath = path.join(uploadDir, newFileName);
-        let stream = fs.createWriteStream(filePath);
-        stream.write(file.data);
-        stream.end();
-        stream.on('finish', () => {
+        try {
+            await fs.writeFile(filePath, file.data);
             resolve({
                 path: filePath
             });
-        });
-        stream.on('error', () => reject());
+        } catch {
+            reject();
+        }
     })
 }
 
@@ -75,7 +80,7 @@ router.post("/upload-discord", async (req, res) => {
     let file = req.files.file;
     if (!file) return res.status(400);
     let uploadDir = str2bool(req.query["private"]) ? prvDir : filesDir;
-    if (!fs.existsSync(uploadDir)) return res.sendStatus(404);
+    if (!await fs.access(uploadDir, fs.constants.W_OK)) return res.sendStatus(404);
     let check = ipRangeCheck(req.ip, [
         "127.0.0.1/8",//ループバックアドレス
         "::1/128",//ループバックアドレス(IPv6)
@@ -105,7 +110,11 @@ router.post("/upload", passport.authenticate('basic', { session: false }), async
     let file = req.files?.file;
     if (!file) return res.status(400);
     let uploadDir = path.join(filesDir, decodeURIComponent(req.query.path));
-    if (!fs.existsSync(uploadDir)) return res.sendStatus(404);
+    try {
+        fs.stat(uploadDir);
+    } catch {
+        return res.sendStatus(404);
+    }
     try {
         let result = await uploadFile(file, uploadDir)
         res.status(200).send({
