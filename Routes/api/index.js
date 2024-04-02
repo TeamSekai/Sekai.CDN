@@ -1,64 +1,41 @@
-const fs = require("fs");
-const path = require("path");
-const express = require("express");
+import fs from "fs/promises";
+import path from "path";
+import express from "express";
 let router = express.Router();
-const config = require("../../config.js");
-const filesDir = path.resolve(__dirname, "../../", config.filesDir);
-const prvDir = path.resolve(__dirname, "../../", config.prvDir);
-const passport = require('passport');
-const passportHttp = require('passport-http');
-const fileUpload = require("express-fileupload");
-const ipRangeCheck = require("ip-range-check");
-
-router.use(fileUpload({
-
-}));
-
-function formatFileSize(bytes) {
-    const kilobyte = 1024;
-    const megabyte = kilobyte * 1024;
-    const gigabyte = megabyte * 1024;
-
-    if (bytes < kilobyte) {
-        return bytes + ' bytes';
-    } else if (bytes < megabyte) {
-        return (bytes / kilobyte).toFixed(2) + ' KB';
-    } else if (bytes < gigabyte) {
-        return (bytes / megabyte).toFixed(2) + ' MB';
-    } else {
-        return (bytes / gigabyte).toFixed(2) + ' GB';
-    }
-}
+import { config, getDirectoryEntries } from "@packages/common";
+const filesDir = path.resolve(import.meta.dirname, "../../", config.filesDir);
+const prvDir = path.resolve(import.meta.dirname, "../../", config.prvDir);
+import passport from 'passport';
+import passportHttp from 'passport-http';
+import fileUpload from "express-fileupload";
+import ipRangeCheck from "ip-range-check";
 
 router.use((req, res, next) => {
+    next();
+})
+
+router.use('/', fileUpload());
+
+router.use(async (req, res, next) => {
     if (req.method != "GET") return next();
     if (req.path.startsWith("/api/files")) return next();
-    let folderPath = path.join(filesDir, decodeURIComponent(req.path).slice(1).split("/").slice(1).join("/"));
     try {
-        let stat = fs.statSync(folderPath)
-        if (!stat.isDirectory()) throw new Error();
-        res.json(fs.readdirSync(folderPath).map(file => {
-            let filePath = path.join(folderPath, file);
-            let stat = fs.statSync(filePath);
-            return {
-                directory: stat.isDirectory(),
-                file: stat.isFile(),
-                name: file,
-                size: stat.size,
-                sizeStr: formatFileSize(stat.size)
-            }
-        }));
+        res.json(await getDirectoryEntries(decodeURIComponent(req.path).slice(1).split("/").slice(1).join("/")));
     } catch (e) {
         res.sendStatus(404);
     }
 })
 
+/**
+ * @param {fileUpload.UploadedFile} file 
+ * @param {string} uploadDir 
+ */
 function uploadFile(file, uploadDir) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         let filePath = path.join(uploadDir, file.name);
         let extName = path.extname(file.name);
         let baseName = path.basename(file.name, extName);
-        let files = fs.readdirSync(uploadDir);
+        let files = await fs.readdir(uploadDir);
         let newFileName = file.name;
         let count = 1;
         while (files.includes(newFileName)) {
@@ -66,15 +43,14 @@ function uploadFile(file, uploadDir) {
             count++;
         }
         filePath = path.join(uploadDir, newFileName);
-        let stream = fs.createWriteStream(filePath);
-        stream.write(file.data);
-        stream.end();
-        stream.on('finish', () => {
+        try {
+            await fs.writeFile(filePath, file.data);
             resolve({
                 path: filePath
             });
-        });
-        stream.on('error', () => reject());
+        } catch {
+            reject();
+        }
     })
 }
 
@@ -100,11 +76,23 @@ function str2bool(str) {
     }
 }
 
+async function directoryExists(uploadDir) {
+    console.log(uploadDir);
+    try {
+        await fs.stat(uploadDir);
+        return true;
+    } catch {
+        return false;
+    }
+}
+
 router.post("/upload-discord", async (req, res) => {
     let file = req.files.file;
     if (!file) return res.status(400);
     let uploadDir = str2bool(req.query["private"]) ? prvDir : filesDir;
-    if (!fs.existsSync(uploadDir)) return res.sendStatus(404);
+    if (!await directoryExists(uploadDir)) {
+        return res.sendStatus(404);
+    }
     let check = ipRangeCheck(req.ip, [
         "127.0.0.1/8",//ループバックアドレス
         "::1/128",//ループバックアドレス(IPv6)
@@ -131,10 +119,12 @@ router.post("/upload-discord", async (req, res) => {
 
 router.post("/upload", passport.authenticate('basic', { session: false }), async (req, res) => {
     if (!req.query.path) return res.status(400);
-    let file = req.files.file;
+    let file = req.files?.file;
     if (!file) return res.status(400);
     let uploadDir = path.join(filesDir, decodeURIComponent(req.query.path));
-    if (!fs.existsSync(uploadDir)) return res.sendStatus(404);
+    if (!await directoryExists(uploadDir)) {
+        return res.sendStatus(404);
+    }
     try {
         let result = await uploadFile(file, uploadDir)
         res.status(200).send({
@@ -146,4 +136,4 @@ router.post("/upload", passport.authenticate('basic', { session: false }), async
 })
 
 
-module.exports = router
+export default router

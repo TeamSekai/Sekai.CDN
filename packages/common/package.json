@@ -1,0 +1,11 @@
+{
+  "name": "@packages/common",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "build": "npx tsc"
+  }
+}

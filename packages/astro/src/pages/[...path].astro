@@ -1,0 +1,76 @@
+---
+import { type DirectoryEntry, getDirectoryEntries } from "@packages/common";
+
+const dirPath: string = Astro.params.path ?? '';
+let files: DirectoryEntry[] | null = null;
+let parentDir: string | null = null;
+
+try {
+    files = await getDirectoryEntries(dirPath);
+    const pathDirs = dirPath.split("/");
+    const length = pathDirs.length;
+    if (length > 0 && pathDirs[0].length > 0) {
+        parentDir = "/" + pathDirs.slice(0, length - 1).join("/");
+    }
+} catch (e) {
+    console.error(e)
+}
+---
+
+<!DOCTYPE html>
+<html lang=ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SimpleCDN</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+  <center>
+    <h1>CDN File list</h1>
+    <hr>
+    {(files == null) && <p>404 Not Found</p>}
+    <button id="upload-button">アップロード(ログインが必要です)</button>
+    <input id="file-input" type="file">
+  </center>
+  <ul id="files">
+    {(parentDir != null) && <li><a href={parentDir}>..</a></li>}
+    {files?.map((file) => <li>
+        <a href={file.name}>{file.name}</a> ({file.directory ? "ディレクトリ" : file.sizeStr})
+    </li>)}
+  </ul>
+  <script>
+    const fileInput = document.getElementById("file-input") as HTMLInputElement;
+    fileInput.addEventListener("change", async () => {
+        const file = fileInput.files[0];
+        if (!window.confirm(`${file.name} をアップロードしますか？`)) return;
+        let formData = new FormData();
+        formData.append("file", file);
+        let params = new URLSearchParams({
+            path: location.pathname
+        });
+        let res = await fetch("/api/upload?" + params, {
+            method: "POST",
+            body: formData
+        });
+        if (res.status == 200) {
+            let json = await res.json();
+            alert(`アップロードしました: ${json.fileName}`);
+            return location.reload();
+        }
+        else if (res.status == 401)
+            return alert("ログインに失敗しました");
+        else
+            return alert(`不明なエラー: ${res.status} ${res.statusText}`);
+    })
+
+    document.getElementById("upload-button").addEventListener("click", () => {
+        console.log("trying..")
+        fileInput.click();
+    });
+  </script>
+</body>
+
+</html>

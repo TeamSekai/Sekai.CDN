@@ -1,4 +1,6 @@
-module.exports = {
+import fs from "fs";
+
+export const config = {
     filesDir: "files",
     prvDir: "private",
     port: 8080,
@@ -6,5 +8,9 @@ module.exports = {
     uploadUserName: "admin",
     uploadPassword: "password",
     useXffHeader: false,
-    ...require("./config.json")
 };
+
+Object.assign(
+    config,
+    JSON.parse(fs.readFileSync("./config.json", "utf-8"))
+);
