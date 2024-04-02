@@ -76,11 +76,23 @@ function str2bool(str) {
     }
 }
 
+async function directoryExists(uploadDir) {
+    console.log(uploadDir);
+    try {
+        await fs.stat(uploadDir);
+        return true;
+    } catch {
+        return false;
+    }
+}
+
 router.post("/upload-discord", async (req, res) => {
     let file = req.files.file;
     if (!file) return res.status(400);
     let uploadDir = str2bool(req.query["private"]) ? prvDir : filesDir;
-    if (!await fs.access(uploadDir, fs.constants.W_OK)) return res.sendStatus(404);
+    if (!await directoryExists(uploadDir)) {
+        return res.sendStatus(404);
+    }
     let check = ipRangeCheck(req.ip, [
         "127.0.0.1/8",//ループバックアドレス
         "::1/128",//ループバックアドレス(IPv6)
@@ -110,9 +122,7 @@ router.post("/upload", passport.authenticate('basic', { session: false }), async
     let file = req.files?.file;
     if (!file) return res.status(400);
     let uploadDir = path.join(filesDir, decodeURIComponent(req.query.path));
-    try {
-        fs.stat(uploadDir);
-    } catch {
+    if (!await directoryExists(uploadDir)) {
         return res.sendStatus(404);
     }
     try {
