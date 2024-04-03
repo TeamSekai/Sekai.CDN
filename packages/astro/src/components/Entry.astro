@@ -1,0 +1,16 @@
+---
+interface Props {
+    name: string;
+    href: string;
+    size?: string;
+}
+
+const { name, href, size } = Astro.props;
+---
+
+<li class="entry-item">
+    <a href={href}>
+        {name}
+    </a>
+    {(size != null) && <span>({size})</span>}
+</li>

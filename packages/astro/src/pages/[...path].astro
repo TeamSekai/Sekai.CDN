@@ -1,5 +1,8 @@
 ---
 import { type DirectoryEntry, getDirectoryEntries } from "@packages/common";
+import Entry from "../components/Entry.astro";
+import UploadButton from "../components/UploadButton.astro";
+import { ViewTransitions } from "astro:transitions";
 
 const dirPath: string = Astro.params.path ?? '';
 let files: DirectoryEntry[] | null = null;
@@ -15,6 +18,10 @@ try {
 } catch (e) {
     console.error(e)
 }
+
+if (files == null) {
+    Astro.response.status = 404;
+}
 ---
 
 <!DOCTYPE html>
@@ -24,7 +31,7 @@ try {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SimpleCDN</title>
-  <link rel="stylesheet" href="/static/style.css">
+  <ViewTransitions />
 </head>
 
 <body>
@@ -32,45 +39,14 @@ try {
     <h1>CDN File list</h1>
     <hr>
     {(files == null) && <p>404 Not Found</p>}
-    <button id="upload-button">アップロード(ログインが必要です)</button>
-    <input id="file-input" type="file">
+    <UploadButton>アップロード(ログインが必要です)</UploadButton>
   </center>
   <ul id="files">
-    {(parentDir != null) && <li><a href={parentDir}>..</a></li>}
-    {files?.map((file) => <li>
-        <a href={file.name}>{file.name}</a> ({file.directory ? "ディレクトリ" : file.sizeStr})
-    </li>)}
+    {(parentDir != null) && <Entry name=".." href={parentDir} />}
+    {files?.map((file) =>
+        <Entry name={file.name} href={file.name} size={file.directory ? "ディレクトリ" : file.sizeStr} />
+    )}
   </ul>
-  <script>
-    const fileInput = document.getElementById("file-input") as HTMLInputElement;
-    fileInput.addEventListener("change", async () => {
-        const file = fileInput.files[0];
-        if (!window.confirm(`${file.name} をアップロードしますか？`)) return;
-        let formData = new FormData();
-        formData.append("file", file);
-        let params = new URLSearchParams({
-            path: location.pathname
-        });
-        let res = await fetch("/api/upload?" + params, {
-            method: "POST",
-            body: formData
-        });
-        if (res.status == 200) {
-            let json = await res.json();
-            alert(`アップロードしました: ${json.fileName}`);
-            return location.reload();
-        }
-        else if (res.status == 401)
-            return alert("ログインに失敗しました");
-        else
-            return alert(`不明なエラー: ${res.status} ${res.statusText}`);
-    })
-
-    document.getElementById("upload-button").addEventListener("click", () => {
-        console.log("trying..")
-        fileInput.click();
-    });
-  </script>
 </body>
 
 </html>
