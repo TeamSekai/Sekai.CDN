@@ -1,0 +1,34 @@
+<button id="upload-button">
+    <slot />
+</button>
+<input id="file-input" type="file">
+<script>
+    const fileInput = document.getElementById("file-input") as HTMLInputElement;
+    fileInput.addEventListener("change", async () => {
+        const file = fileInput.files[0];
+        if (!window.confirm(`${file.name} をアップロードしますか？`)) return;
+        let formData = new FormData();
+        formData.append("file", file);
+        let params = new URLSearchParams({
+            path: location.pathname
+        });
+        let res = await fetch("/api/upload?" + params, {
+            method: "POST",
+            body: formData
+        });
+        if (res.status == 200) {
+            let json = await res.json();
+            alert(`アップロードしました: ${json.fileName}`);
+            return location.reload();
+        }
+        else if (res.status == 401)
+            return alert("ログインに失敗しました");
+        else
+            return alert(`不明なエラー: ${res.status} ${res.statusText}`);
+    })
+
+    document.getElementById("upload-button").addEventListener("click", () => {
+        console.log("trying..")
+        fileInput.click();
+    });
+</script>
