@@ -23,17 +23,15 @@ app.get("/private/:filename", async (req, res) => {
     const filename = req.params.filename;
     const filePath = path.resolve(import.meta.dirname, 'private', filename);
 
-    res.sendFile(filePath, { root: '/' }, () => {
-        // ファイルが存在しない場合、404エラーを送信
-        res.status(404).sendFile(path.join(import.meta.dirname, 'assets', '404.png'));
+    res.sendFile(filePath, { root: '/' }, (err) => {
+        if (err) {
+            // ファイルが存在しない場合、404エラーを送信
+            res.status(404).sendFile(path.join(import.meta.dirname, 'assets', '404.png'));
+        }
     });
 });
 
 app.use("/", router)
-
-app.use((req, res, next) => {
-    res.status(404).sendFile(path.join(import.meta.dirname, 'assets', '404.png'));
-});
 
 app.use((err, req, res, next) => {
     console.error(err)
