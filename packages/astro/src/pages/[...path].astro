@@ -2,6 +2,7 @@
 import { type DirectoryEntry, getDirectoryEntries } from "@packages/common";
 import Entry from "../components/Entry.astro";
 import UploadButton from "../components/UploadButton.astro";
+import { ViewTransitions } from "astro:transitions";
 
 const dirPath: string = Astro.params.path ?? '';
 let files: DirectoryEntry[] | null = null;
@@ -30,6 +31,7 @@ if (files == null) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SimpleCDN</title>
+  <ViewTransitions />
 </head>
 
 <body>
