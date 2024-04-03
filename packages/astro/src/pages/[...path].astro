@@ -15,6 +15,10 @@ try {
 } catch (e) {
     console.error(e)
 }
+
+if (files == null) {
+    Astro.response.status = 404;
+}
 ---
 
 <!DOCTYPE html>
