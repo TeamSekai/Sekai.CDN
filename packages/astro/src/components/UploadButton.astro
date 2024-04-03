@@ -2,6 +2,13 @@
     <slot />
 </button>
 <input id="file-input" type="file">
+
+<style>
+    #file-input {
+        display: none;
+    }
+</style>
+
 <script>
     const fileInput = document.getElementById("file-input") as HTMLInputElement;
     fileInput.addEventListener("change", async () => {
