@@ -8,9 +8,45 @@ interface Props {
 const { name, href, size } = Astro.props;
 ---
 
-<li class="entry-item">
-    <a href={href}>
-        {name}
+<li class="item">
+    <a href={href} class="link">
+        <div class="box">
+            <span class="name">{name}</span>
+            {(size != null) && <span>({size})</span>}
+        </div>
     </a>
-    {(size != null) && <span>({size})</span>}
 </li>
+
+<style>
+    .item {
+        list-style: none;
+        border-bottom: 2px solid silver;
+        margin: 0;
+    }
+
+    .item:last-child {
+        border-bottom-width: 0;
+    }
+
+    .link {
+        color: black;
+        text-decoration: none;
+    }
+
+    .box {
+        padding: 0.5em;
+        margin: 0;
+    }
+
+    .name {
+        font-family: monospace;
+    }
+
+    .box:hover {
+        background-color: silver;
+    }
+
+    .box:hover .name {
+        font-weight: bold;
+    }
+</style>
