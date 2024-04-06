@@ -32,7 +32,7 @@ function getIconSrc() {
             </div>
             <div class="data-box">
                 <div class="column-box name-box">
-                    <span class="name" title={name}>{name}</span>
+                    <span class="name">{name}</span>
                 </div>
                 <div class="column-box size-box">
                     {(size != null) && <span>{size}</span>}
@@ -77,10 +77,6 @@ function getIconSrc() {
         background-color: silver;
     }
 
-    .box:hover .name {
-        font-weight: bold;
-    }
-
     .box {
         display: flex;
     }
@@ -94,11 +90,12 @@ function getIconSrc() {
         width: 100%;
     }
 
+    .column-box {
+        padding: 0 1em 0;
+    }
+
     .name-box {
         flex: 2;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
     }
 
     .size-box {
