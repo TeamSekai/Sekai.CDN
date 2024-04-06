@@ -1,16 +1,33 @@
 ---
+type EntryType = 'file' | 'directory' | 'parent';
+
 interface Props {
     name: string;
     href: string;
     size?: string;
+    type: EntryType;
 }
 
-const { name, href, size } = Astro.props;
+const { name, href, size, type } = Astro.props;
+
+function getIconSrc() {
+    switch (type) {
+        default:
+        case 'file':
+            return '/static/file.svg';
+        case 'directory':
+            return '/static/directory.svg';
+        case 'parent':
+            return '/static/parent.svg';
+    }
+}
+
 ---
 
 <li class="item">
     <a href={href} class="link">
         <div class="box">
+            <img class="icon" src={getIconSrc()} alt="ファイル">
             <span class="name">{name}</span>
             {(size != null) && <span>({size})</span>}
         </div>
@@ -36,6 +53,12 @@ const { name, href, size } = Astro.props;
     .box {
         padding: 0.5em;
         margin: 0;
+    }
+
+    .icon {
+        height: 1.25em;
+        width: auto;
+        vertical-align: middle;
     }
 
     .name {
