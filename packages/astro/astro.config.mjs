@@ -12,5 +12,6 @@ export default defineConfig({
     ssr: {
       noExternal: ['path-to-regexp']
     }
-  }
+  },
+  prefetch: false
 });

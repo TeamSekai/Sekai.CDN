@@ -1,11 +1,29 @@
 <button id="upload-button">
-    <slot />
+    <img src="/static/upload.svg" class="icon">
+    <span>アップロード(ログインが必要です)</span>
 </button>
 <input id="file-input" type="file">
 
 <style>
     #file-input {
         display: none;
+    }
+
+    #upload-button {
+        background-color: transparent;
+        padding: 0.5em;
+        border: 2px solid silver;
+        border-radius: 0.5em;
+    }
+
+    #upload-button:hover {
+        background-color: silver;
+    }
+
+    .icon {
+        height: 2em;
+        width: auto;
+        vertical-align: middle;
     }
 </style>
 

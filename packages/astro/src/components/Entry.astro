@@ -1,16 +1,104 @@
 ---
+type EntryType = 'file' | 'directory' | 'parent';
+
 interface Props {
     name: string;
     href: string;
     size?: string;
+    type: EntryType;
 }
 
-const { name, href, size } = Astro.props;
+const { name, href, size, type } = Astro.props;
+
+function getIconSrc() {
+    switch (type) {
+        default:
+        case 'file':
+            return '/static/file.svg';
+        case 'directory':
+            return '/static/directory.svg';
+        case 'parent':
+            return '/static/parent.svg';
+    }
+}
+
 ---
 
-<li class="entry-item">
-    <a href={href}>
-        {name}
+<li class="item">
+    <a href={href} class="link">
+        <div class="box">
+            <div class="icon-box">
+                <img class="icon" src={getIconSrc()} alt="ファイル">
+            </div>
+            <div class="data-box">
+                <div class="column-box name-box">
+                    <span class="name">{name}</span>
+                </div>
+                <div class="column-box size-box">
+                    {(size != null) && <span>{size}</span>}
+                </div>
+            </div>
+        </div>
     </a>
-    {(size != null) && <span>({size})</span>}
 </li>
+
+<style>
+    .item {
+        list-style: none;
+        border-bottom: 2px solid silver;
+        margin: 0;
+    }
+
+    .item:last-child {
+        border-bottom-width: 0;
+    }
+
+    .link {
+        color: black;
+        text-decoration: none;
+    }
+
+    .box {
+        padding: 0.5em;
+        margin: 0;
+    }
+
+    .icon {
+        height: 1.25em;
+        width: auto;
+        vertical-align: middle;
+    }
+
+    .name {
+        font-family: monospace;
+    }
+
+    .box:hover {
+        background-color: silver;
+    }
+
+    .box {
+        display: flex;
+    }
+
+    .icon-box {
+        width: 1.5em;
+    }
+
+    .data-box {
+        display: flex;
+        width: 100%;
+    }
+
+    .column-box {
+        padding: 0 1em 0;
+    }
+
+    .name-box {
+        flex: 2;
+    }
+
+    .size-box {
+        flex: 1;
+    }
+</style>
