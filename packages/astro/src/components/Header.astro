@@ -1,0 +1,28 @@
+---
+import UploadButton from "../components/UploadButton.astro";
+
+interface Props {
+    found: boolean;
+}
+
+const { found } = Astro.props;
+---
+
+<div class="header">
+    <div class="title-box">
+        <h1>CDN File list</h1>
+    </div>
+    {(!found) && <p>404 Not Found</p>}
+    <UploadButton>アップロード(ログインが必要です)</UploadButton>
+</div>
+
+<style>
+    .header {
+        text-align: center;
+    }
+
+    .title-box {
+        border-bottom: 2px solid silver;
+        margin-bottom: 8px;
+    }
+</style>

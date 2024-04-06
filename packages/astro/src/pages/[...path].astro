@@ -1,9 +1,9 @@
 ---
 import { type DirectoryEntry, getDirectoryEntries } from "@packages/common";
 import Entry from "../components/Entry.astro";
-import UploadButton from "../components/UploadButton.astro";
 import Layout from "../layouts/Layout.astro";
 import List from "../components/List.astro";
+import Header from "../components/Header.astro";
 
 const dirPath: string = Astro.params.path ?? '';
 let files: DirectoryEntry[] | null = null;
@@ -26,12 +26,7 @@ if (files == null) {
 ---
 
 <Layout>
-  <center>
-    <h1>CDN File list</h1>
-    <hr>
-    {(files == null) && <p>404 Not Found</p>}
-    <UploadButton>アップロード(ログインが必要です)</UploadButton>
-  </center>
+  <Header found={files != null} />
   <List>
     {(parentDir != null) && <Entry name=".." href={parentDir} type="parent" />}
     {files?.map((file) =>
