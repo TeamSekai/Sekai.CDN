@@ -27,9 +27,17 @@ function getIconSrc() {
 <li class="item">
     <a href={href} class="link">
         <div class="box">
-            <img class="icon" src={getIconSrc()} alt="ファイル">
-            <span class="name">{name}</span>
-            {(size != null) && <span>({size})</span>}
+            <div class="icon-box">
+                <img class="icon" src={getIconSrc()} alt="ファイル">
+            </div>
+            <div class="data-box">
+                <div class="column-box name-box">
+                    <span class="name" title={name}>{name}</span>
+                </div>
+                <div class="column-box size-box">
+                    {(size != null) && <span>{size}</span>}
+                </div>
+            </div>
         </div>
     </a>
 </li>
@@ -71,5 +79,29 @@ function getIconSrc() {
 
     .box:hover .name {
         font-weight: bold;
+    }
+
+    .box {
+        display: flex;
+    }
+
+    .icon-box {
+        width: 1.5em;
+    }
+
+    .data-box {
+        display: flex;
+        width: 100%;
+    }
+
+    .name-box {
+        flex: 2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .size-box {
+        flex: 1;
     }
 </style>
