@@ -19,10 +19,15 @@ const { found } = Astro.props;
 
 <style>
     .header {
-        position: sticky;
         top: 0;
         text-align: center;
         background: white;
+    }
+
+    @media screen and (min-height: 360px) {
+        .header {
+            position: sticky;
+        }
     }
 
     .title-box {
