@@ -26,15 +26,40 @@ if (files == null) {
 ---
 
 <Layout>
-  <Header found={files != null} />
-  <List>
-    {(parentDir != null) && <Entry name=".." href={parentDir} type="parent" />}
-    {files?.map((file) =>
-        <Entry
-          name={file.name}
-          href={file.name}
-          size={file.directory ? "ディレクトリ" : file.sizeStr}
-          type={file.directory ? "directory" : "file"} />
-    )}
-  </List>
+    <div id="body-wrapper">
+        <div id="header-wrapper">
+            <Header found={files != null} />
+        </div>
+        <div id="list-wrapper">
+            <List>
+                {(parentDir != null) && <Entry name=".." href={parentDir} type="parent" />}
+                {files?.map((file) =>
+                    <Entry
+                    name={file.name}
+                    href={file.name}
+                    size={file.directory ? "ディレクトリ" : file.sizeStr}
+                    type={file.directory ? "directory" : "file"} />
+                )}
+            </List>
+        </div>
+    </div>
 </Layout>
+
+<style>
+    #body-wrapper {
+        --header-width: 6em;
+        --body-padding-width: 8px;
+        padding: var(--body-padding-width);
+    }
+
+    #header-wrapper {
+        height: var(--header-width);
+    }
+
+    @media screen and (min-height: 360px) {
+        #list-wrapper {
+            height: calc(100vh - var(--header-width) - 2 * var(--body-padding-width));
+            overflow: auto;
+        }
+    }
+</style>
