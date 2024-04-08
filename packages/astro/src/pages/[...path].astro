@@ -56,9 +56,15 @@ if (files == null) {
         height: var(--header-width);
     }
 
+    #list-wrapper {
+        --border-width: 2px;
+        border: var(--border-width) solid silver;
+        border-radius: 0.5em;
+    }
+
     @media screen and (min-height: 360px) {
         #list-wrapper {
-            height: calc(100vh - var(--header-width) - 2 * var(--body-padding-width));
+            height: calc(100vh - var(--header-width) - 2 * var(--body-padding-width) - 2 * var(--border-width));
             overflow: auto;
         }
     }
