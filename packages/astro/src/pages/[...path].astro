@@ -47,24 +47,20 @@ if (files == null) {
 
 <style>
     #body-wrapper {
-        --header-width: 6em;
         --body-padding-width: 8px;
+        display: flex;
+        flex-flow: column nowrap;
+        height: calc(100% - 2 * var(--body-padding-width));
         padding: var(--body-padding-width);
     }
 
-    #header-wrapper {
-        height: var(--header-width);
-    }
-
     #list-wrapper {
-        --border-width: 2px;
-        border: var(--border-width) solid silver;
+        border: 2px solid silver;
         border-radius: 0.5em;
     }
 
     @media screen and (min-height: 360px) {
         #list-wrapper {
-            height: calc(100vh - var(--header-width) - 2 * var(--body-padding-width) - 2 * var(--border-width));
             overflow: auto;
         }
     }
