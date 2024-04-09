@@ -52,8 +52,8 @@ const { parentDir, files } = Astro.props;
 
     document.addEventListener('astro:page-load', () => {
         // Header の DOM
-        const listLayoutButton = document.getElementById('list-layout-button');
-        const gridLayoutButton = document.getElementById('grid-layout-button');
+        const listLayoutButton = document.getElementById('list-layout-button')!;
+        const gridLayoutButton = document.getElementById('grid-layout-button')!;
 
         listLayoutButton.addEventListener('click', () => setLayout('list'));
         gridLayoutButton.addEventListener('click', () => setLayout('grid'));

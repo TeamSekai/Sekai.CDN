@@ -14,7 +14,11 @@ import IconButton from "./IconButton.astro";
 <script>
     const fileInput = document.getElementById("file-input") as HTMLInputElement;
     fileInput.addEventListener("change", async () => {
-        const file = fileInput.files[0];
+        const files = fileInput.files;
+        if (files == null) {
+            return;
+        }
+        const file = files[0];
         if (!window.confirm(`${file.name} をアップロードしますか？`)) return;
         let formData = new FormData();
         formData.append("file", file);
@@ -36,7 +40,7 @@ import IconButton from "./IconButton.astro";
             return alert(`不明なエラー: ${res.status} ${res.statusText}`);
     })
 
-    document.getElementById("upload-button").addEventListener("click", () => {
+    document.getElementById("upload-button")!.addEventListener("click", () => {
         console.log("trying..")
         fileInput.click();
     });

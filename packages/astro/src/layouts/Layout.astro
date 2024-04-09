@@ -2,7 +2,7 @@
 import { ViewTransitions } from "astro:transitions";
 import Header from "../components/Header.astro";
 
-let bodyClass = Astro.url.searchParams.get('layout') == 'grid' && 'grid-layout';
+let bodyClass = Astro.url.searchParams.get('layout') == 'grid' ? 'grid-layout' : null;
 ---
 
 <!DOCTYPE html>
