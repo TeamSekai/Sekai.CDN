@@ -2,6 +2,7 @@
 import { type DirectoryEntry, getDirectoryEntries } from "@packages/common";
 import Layout from "../layouts/Layout.astro";
 import List from "../components/List.astro";
+import NotFound from "../components/NotFound.astro";
 
 const dirPath: string = Astro.params.path ?? '';
 let files: DirectoryEntry[] | null = null;
@@ -24,5 +25,5 @@ if (files == null) {
 ---
 
 <Layout>
-    {files != null ? <List parentDir={parentDir} files={files} /> : <p>404 Not Found</p>}
+    {files != null ? <List parentDir={parentDir} files={files} /> : <NotFound />}
 </Layout>
