@@ -34,21 +34,28 @@ const { parentDir, files } = Astro.props;
 </style>
 
 <script>
+    function replaceURLSearchParam(key: string, value: string) {
+        const params = new URLSearchParams(location.search);
+        params.set(key, value);
+        location.search = params.toString();
+    }
+
+    function setLayout(layout: 'list' | 'grid') {
+        replaceURLSearchParam('layout', layout);
+        switch (layout) {
+            case "list":
+                document.body.classList.remove('grid-layout');
+            case "grid":
+                document.body.classList.add('grid-layout');
+        }
+    }
+
     document.addEventListener('astro:page-load', () => {
         // Header の DOM
         const listLayoutButton = document.getElementById('list-layout-button');
         const gridLayoutButton = document.getElementById('grid-layout-button');
 
-        const list = document.getElementById('list');
-
-        listLayoutButton.addEventListener('click', () => {
-            console.log('clicked');
-            document.body.classList.remove('grid-layout');
-        });
-
-        gridLayoutButton.addEventListener('click', () => {
-            console.log('clicked');
-            document.body.classList.add('grid-layout');
-        });
-    })
+        listLayoutButton.addEventListener('click', () => setLayout('list'));
+        gridLayoutButton.addEventListener('click', () => setLayout('grid'));
+    });
 </script>

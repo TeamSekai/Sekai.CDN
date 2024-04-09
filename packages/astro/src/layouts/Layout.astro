@@ -1,6 +1,8 @@
 ---
 import { ViewTransitions } from "astro:transitions";
 import Header from "../components/Header.astro";
+
+let bodyClass = Astro.url.searchParams.get('layout') == 'grid' && 'grid-layout';
 ---
 
 <!DOCTYPE html>
@@ -13,7 +15,7 @@ import Header from "../components/Header.astro";
     <ViewTransitions />
     </head>
 
-    <body>
+    <body class={bodyClass}>
         <div id="body-wrapper">
             <div id="header-wrapper">
                 <Header />
