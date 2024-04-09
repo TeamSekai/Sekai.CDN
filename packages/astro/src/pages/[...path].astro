@@ -2,7 +2,6 @@
 import { type DirectoryEntry, getDirectoryEntries } from "@packages/common";
 import Layout from "../layouts/Layout.astro";
 import List from "../components/List.astro";
-import Header from "../components/Header.astro";
 
 const dirPath: string = Astro.params.path ?? '';
 let files: DirectoryEntry[] | null = null;
@@ -25,33 +24,5 @@ if (files == null) {
 ---
 
 <Layout>
-    <div id="body-wrapper">
-        <div id="header-wrapper">
-            <Header found={files != null} />
-        </div>
-        <div id="list-wrapper">
-            {files != null ? <List parentDir={parentDir} files={files} /> : <p>404 Not Found</p>}
-        </div>
-    </div>
+    {files != null ? <List parentDir={parentDir} files={files} /> : <p>404 Not Found</p>}
 </Layout>
-
-<style>
-    #body-wrapper {
-        --body-padding-width: 8px;
-        display: flex;
-        flex-flow: column nowrap;
-        height: calc(100% - 2 * var(--body-padding-width));
-        padding: var(--body-padding-width);
-    }
-
-    #list-wrapper {
-        border: 2px solid silver;
-        border-radius: 0.5em;
-    }
-
-    @media screen and (min-height: 360px) {
-        #list-wrapper {
-            overflow: auto;
-        }
-    }
-</style>

@@ -1,5 +1,6 @@
 ---
 import { ViewTransitions } from "astro:transitions";
+import Header from "../components/Header.astro";
 ---
 
 <!DOCTYPE html>
@@ -13,7 +14,14 @@ import { ViewTransitions } from "astro:transitions";
     </head>
 
     <body>
-        <slot />
+        <div id="body-wrapper">
+            <div id="header-wrapper">
+                <Header />
+            </div>
+            <div id="list-wrapper">
+                <slot />
+            </div>
+        </div>
     </body>
 
 </html>
@@ -31,5 +39,26 @@ import { ViewTransitions } from "astro:transitions";
 
     body {
         height: 100%;
+    }
+</style>
+
+<style>
+    #body-wrapper {
+        --body-padding-width: 8px;
+        display: flex;
+        flex-flow: column nowrap;
+        height: calc(100% - 2 * var(--body-padding-width));
+        padding: var(--body-padding-width);
+    }
+
+    #list-wrapper {
+        border: 2px solid silver;
+        border-radius: 0.5em;
+    }
+
+    @media screen and (min-height: 360px) {
+        #list-wrapper {
+            overflow: auto;
+        }
     }
 </style>
