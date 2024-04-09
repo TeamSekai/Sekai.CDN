@@ -1,0 +1,31 @@
+---
+interface Props {
+    id?: string;
+    title?: string;
+    src: string;
+}
+
+const { id, title, src } = Astro.props;
+---
+
+<button type="button" id={id} title={title}>
+    <img src={src} alt="">
+</button>
+
+<style>
+    button {
+        background-color: transparent;
+        padding: 0.5em;
+        border-radius: 50%;
+    }
+
+    button:hover {
+        background-color: silver;
+    }
+
+    img {
+        height: 2em;
+        width: auto;
+        vertical-align: middle;
+    }
+</style>

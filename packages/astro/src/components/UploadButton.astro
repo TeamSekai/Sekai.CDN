@@ -1,27 +1,13 @@
-<button id="upload-button">
-    <img src="/static/upload.svg" class="icon" title="アップロード(ログインが必要です)">
-</button>
+---
+import IconButton from "./IconButton.astro";
+---
+
+<IconButton id="upload-button" title="アップロード(ログインが必要です)" src="/static/upload.svg" />
 <input id="file-input" type="file">
 
 <style>
     #file-input {
         display: none;
-    }
-
-    #upload-button {
-        background-color: transparent;
-        padding: 0.5em;
-        border-radius: 50%;
-    }
-
-    #upload-button:hover {
-        background-color: silver;
-    }
-
-    .icon {
-        height: 2em;
-        width: auto;
-        vertical-align: middle;
     }
 </style>
 

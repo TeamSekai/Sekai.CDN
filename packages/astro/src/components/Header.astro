@@ -1,12 +1,19 @@
 ---
 import UploadButton from "../components/UploadButton.astro";
+import IconButton from "./IconButton.astro";
 ---
 
 <div class="header">
     <div class="title-box">
         <h1>CDN File list</h1>
     </div>
-    <div class="upload-button-box">
+    <div class="button-box">
+        <IconButton title="リスト形式" src="/static/list.svg" />
+    </div>
+    <div class="button-box">
+        <IconButton title="グリッド形式" src="/static/grid.svg" />
+    </div>
+    <div class="button-box">
         <UploadButton />
     </div>
 </div>
@@ -22,5 +29,9 @@ import UploadButton from "../components/UploadButton.astro";
         text-align: center;
         font-family: sans-serif;
         width: 100%;
+    }
+
+    .button-box {
+        margin: 0.25em;
     }
 </style>
