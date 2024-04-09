@@ -12,19 +12,25 @@ const { found } = Astro.props;
     <div class="title-box">
         <h1>CDN File list</h1>
     </div>
-    {(!found) && <p>404 Not Found</p>}
+    <div class="upload-button-box">
         <UploadButton />
     </div>
 </div>
 
 <style>
     .header {
+        position: relative;
         top: 0;
-        text-align: center;
+        margin-bottom: 8px;
     }
 
     .title-box {
-        border-bottom: 2px solid silver;
-        margin-bottom: 8px;
+        text-align: center;
+    }
+
+    .upload-button-box {
+        position: absolute;
+        top: 0;
+        right: 0;
     }
 </style>

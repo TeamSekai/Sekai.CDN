@@ -1,6 +1,5 @@
 ---
 import { type DirectoryEntry, getDirectoryEntries } from "@packages/common";
-import Entry from "../components/Entry.astro";
 import Layout from "../layouts/Layout.astro";
 import List from "../components/List.astro";
 import Header from "../components/Header.astro";
@@ -31,16 +30,7 @@ if (files == null) {
             <Header found={files != null} />
         </div>
         <div id="list-wrapper">
-            <List>
-                {(parentDir != null) && <Entry name=".." href={parentDir} type="parent" />}
-                {files?.map((file) =>
-                    <Entry
-                    name={file.name}
-                    href={file.name}
-                    size={file.directory ? "ディレクトリ" : file.sizeStr}
-                    type={file.directory ? "directory" : "file"} />
-                )}
-            </List>
+            {files != null ? <List parentDir={parentDir} files={files} /> : <p>404 Not Found</p>}
         </div>
     </div>
 </Layout>

@@ -1,5 +1,25 @@
+---
+import type { DirectoryEntry } from '@packages/common';
+import Entry from './Entry.astro';
+
+interface Props {
+    parentDir: string | null;
+    files: DirectoryEntry[] | null;
+}
+
+const { parentDir, files } = Astro.props;
+---
+
 <ul class="list">
-    <slot />
+    {(parentDir != null) && <Entry name=".." href={parentDir} type="parent" />}
+    {files?.map((file) =>
+        <Entry
+            name={file.name}
+            href={file.name}
+            size={file.directory ? "ディレクトリ" : file.sizeStr}
+            type={file.directory ? "directory" : "file"}
+        />
+    )}
 </ul>
 
 <style>
