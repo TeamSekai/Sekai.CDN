@@ -12,7 +12,7 @@ const { parentDir, files } = Astro.props;
 
 <ul class="list">
     {(parentDir != null) && <Entry name=".." href={parentDir} type="parent" />}
-    {files?.map((file) =>
+    {files.map((file) =>
         <Entry
             name={file.name}
             href={file.name}
