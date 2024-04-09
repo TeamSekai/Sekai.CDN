@@ -73,7 +73,7 @@ function getIconSrc() {
         font-family: Consolas, monospace;
     }
 
-    .box:hover {
+    .item:hover {
         background-color: silver;
     }
 
@@ -101,5 +101,16 @@ function getIconSrc() {
     .size-box {
         flex: 1;
         font-family: serif;
+    }
+</style>
+
+<style is:global>
+    .grid-layout .box {
+        flex-direction: column;
+    }
+
+    .grid-layout .data-box {
+        flex-direction: column;
+        width: auto;
     }
 </style>

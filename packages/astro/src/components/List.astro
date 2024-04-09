@@ -10,7 +10,7 @@ interface Props {
 const { parentDir, files } = Astro.props;
 ---
 
-<ul class="list">
+<ul id="list" class="list">
     {(parentDir != null) && <Entry name=".." href={parentDir} type="parent" />}
     {files.map((file) =>
         <Entry
@@ -22,8 +22,29 @@ const { parentDir, files } = Astro.props;
     )}
 </ul>
 
-<style>
+<style is:global>
     .list {
         padding: 0;
     }
+
+    .grid-layout .list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    }
 </style>
+
+<script>
+    // Header の DOM
+    const listLayoutButton = document.getElementById('list-layout-button');
+    const gridLayoutButton = document.getElementById('grid-layout-button');
+
+    const list = document.getElementById('list');
+
+    listLayoutButton.addEventListener('click', () => {
+        document.body.classList.remove('grid-layout');
+    });
+
+    gridLayoutButton.addEventListener('click', () => {
+        document.body.classList.add('grid-layout');
+    });
+</script>
