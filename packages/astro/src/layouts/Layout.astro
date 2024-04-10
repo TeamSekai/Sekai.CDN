@@ -1,9 +1,12 @@
 ---
 import { ViewTransitions } from "astro:transitions";
+import Header from "../components/Header.astro";
+
+let bodyClass = Astro.url.searchParams.get('layout') == 'grid' ? 'grid-layout' : null;
 ---
 
 <!DOCTYPE html>
-<html lang=ja">
+<html lang="ja">
 
     <head>
     <meta charset="UTF-8">
@@ -12,8 +15,53 @@ import { ViewTransitions } from "astro:transitions";
     <ViewTransitions />
     </head>
 
-    <body>
-        <slot />
+    <body class={bodyClass}>
+        <div id="body-wrapper">
+            <div id="header-wrapper">
+                <Header />
+            </div>
+            <div id="list-wrapper">
+                <slot />
+            </div>
+        </div>
     </body>
 
 </html>
+
+<style is:global>
+    * {
+        background: transparent;
+        padding: 0;
+        border: 0;
+        margin: 0;
+    }
+
+    html {
+        height: 100%;
+    }
+
+    body {
+        height: 100%;
+    }
+</style>
+
+<style>
+    #body-wrapper {
+        --body-padding-width: 8px;
+        display: flex;
+        flex-flow: column nowrap;
+        height: calc(100% - 2 * var(--body-padding-width));
+        padding: var(--body-padding-width);
+    }
+
+    #list-wrapper {
+        border: 2px solid silver;
+        border-radius: 0.5em;
+    }
+
+    @media screen and (min-height: 360px) {
+        #list-wrapper {
+            overflow: auto;
+        }
+    }
+</style>

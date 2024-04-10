@@ -22,10 +22,12 @@ function getIconSrc() {
     }
 }
 
+const searchParams = Astro.url.search;
+const fullHref = (searchParams && type != 'file') ? href + searchParams : href;
 ---
 
 <li class="item">
-    <a href={href} class="link">
+    <a href={fullHref} class="link">
         <div class="box">
             <div class="icon-box">
                 <img class="icon" src={getIconSrc()} alt="ファイル">
@@ -45,22 +47,12 @@ function getIconSrc() {
 <style>
     .item {
         list-style: none;
-        border-bottom: 2px solid silver;
-        margin: 0;
-    }
-
-    .item:last-child {
-        border-bottom-width: 0;
+        margin: 0.25em;
     }
 
     .link {
         color: black;
         text-decoration: none;
-    }
-
-    .box {
-        padding: 0.5em;
-        margin: 0;
     }
 
     .icon {
@@ -70,15 +62,29 @@ function getIconSrc() {
     }
 
     .name {
-        font-family: monospace;
-    }
-
-    .box:hover {
-        background-color: silver;
+        font-family: Consolas, monospace;
     }
 
     .box {
+        --horizontal-padding: 1em;
         display: flex;
+        width: calc(100% - 2 * var(--horizontal-padding));
+        height: 100%;
+        background-color: #c0c0c040;
+        padding: 0 var(--horizontal-padding) 0;
+        border-radius: 1em;
+    }
+
+    .box:hover {
+        background-color: #c0c0c0;
+    }
+
+    .item:nth-child(2n) .box {
+        background-color: #80808040;
+    }
+
+    .item:nth-child(2n) .box:hover {
+        background-color: #808080;
     }
 
     .icon-box {
@@ -98,7 +104,23 @@ function getIconSrc() {
         flex: 2;
     }
 
+    .name {
+        overflow-wrap: break-word;
+    }
+
     .size-box {
         flex: 1;
+        font-family: serif;
+    }
+</style>
+
+<style is:global>
+    .grid-layout .box {
+        flex-direction: column;
+    }
+
+    .grid-layout .data-box {
+        flex-direction: column;
+        width: auto;
     }
 </style>

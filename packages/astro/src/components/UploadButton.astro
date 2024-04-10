@@ -1,36 +1,24 @@
-<button id="upload-button">
-    <img src="/static/upload.svg" class="icon">
-    <span>アップロード(ログインが必要です)</span>
-</button>
+---
+import IconButton from "./IconButton.astro";
+---
+
+<IconButton id="upload-button" title="アップロード(ログインが必要です)" src="/static/upload.svg" />
 <input id="file-input" type="file">
 
 <style>
     #file-input {
         display: none;
     }
-
-    #upload-button {
-        background-color: transparent;
-        padding: 0.5em;
-        border: 2px solid silver;
-        border-radius: 0.5em;
-    }
-
-    #upload-button:hover {
-        background-color: silver;
-    }
-
-    .icon {
-        height: 2em;
-        width: auto;
-        vertical-align: middle;
-    }
 </style>
 
 <script>
     const fileInput = document.getElementById("file-input") as HTMLInputElement;
     fileInput.addEventListener("change", async () => {
-        const file = fileInput.files[0];
+        const files = fileInput.files;
+        if (files == null) {
+            return;
+        }
+        const file = files[0];
         if (!window.confirm(`${file.name} をアップロードしますか？`)) return;
         let formData = new FormData();
         formData.append("file", file);
@@ -52,7 +40,7 @@
             return alert(`不明なエラー: ${res.status} ${res.statusText}`);
     })
 
-    document.getElementById("upload-button").addEventListener("click", () => {
+    document.getElementById("upload-button")!.addEventListener("click", () => {
         console.log("trying..")
         fileInput.click();
     });

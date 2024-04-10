@@ -1,28 +1,37 @@
 ---
 import UploadButton from "../components/UploadButton.astro";
-
-interface Props {
-    found: boolean;
-}
-
-const { found } = Astro.props;
+import IconButton from "./IconButton.astro";
 ---
 
 <div class="header">
     <div class="title-box">
         <h1>CDN File list</h1>
     </div>
-    {(!found) && <p>404 Not Found</p>}
-    <UploadButton />
+    <div class="button-box">
+        <IconButton id="list-layout-button" title="リスト形式" src="/static/list.svg" />
+    </div>
+    <div class="button-box">
+        <IconButton id="grid-layout-button" title="グリッド形式" src="/static/grid.svg" />
+    </div>
+    <div class="button-box">
+        <UploadButton />
+    </div>
 </div>
 
 <style>
     .header {
-        text-align: center;
+        display: flex;
+        top: 0;
+        margin-bottom: 8px;
     }
 
     .title-box {
-        border-bottom: 2px solid silver;
-        margin-bottom: 8px;
+        text-align: center;
+        font-family: sans-serif;
+        width: 100%;
+    }
+
+    .button-box {
+        margin: 0.25em;
     }
 </style>

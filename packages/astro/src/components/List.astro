@@ -1,11 +1,61 @@
-<ul class="list">
-    <slot />
+---
+import type { DirectoryEntry } from '@packages/common';
+import Entry from './Entry.astro';
+
+interface Props {
+    parentDir: string | null;
+    files: DirectoryEntry[];
+}
+
+const { parentDir, files } = Astro.props;
+---
+
+<ul id="list" class="list">
+    {(parentDir != null) && <Entry name=".." href={parentDir} type="parent" />}
+    {files.map((file) =>
+        <Entry
+            name={file.name}
+            href={file.name}
+            size={file.directory ? "ディレクトリ" : file.sizeStr}
+            type={file.directory ? "directory" : "file"}
+        />
+    )}
 </ul>
 
-<style>
+<style is:global>
     .list {
-        padding: 0;
-        border: 2px solid silver;
-        border-radius: 0.5em;
+        padding: 0.25em;
+    }
+
+    .grid-layout .list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     }
 </style>
+
+<script>
+    function replaceURLSearchParam(key: string, value: string) {
+        const params = new URLSearchParams(location.search);
+        params.set(key, value);
+        location.search = params.toString();
+    }
+
+    function setLayout(layout: 'list' | 'grid') {
+        replaceURLSearchParam('layout', layout);
+        switch (layout) {
+            case "list":
+                document.body.classList.remove('grid-layout');
+            case "grid":
+                document.body.classList.add('grid-layout');
+        }
+    }
+
+    document.addEventListener('astro:page-load', () => {
+        // Header の DOM
+        const listLayoutButton = document.getElementById('list-layout-button')!;
+        const gridLayoutButton = document.getElementById('grid-layout-button')!;
+
+        listLayoutButton.addEventListener('click', () => setLayout('list'));
+        gridLayoutButton.addEventListener('click', () => setLayout('grid'));
+    });
+</script>
