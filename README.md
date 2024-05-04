@@ -7,7 +7,7 @@ Cloudflare Cache is serve files from CF CDN Server.
 So I made this repo. You can use as Simple&Lightweight File Server or Fast&LightWeight CDN Server!
 
 # How to install?
-1. clone this repo (`$git clone https://github.com/ringo360/cdn.git`)
+1. clone this repo (`$git clone https://github.com/TeamSekai/Sekai.CDN.git`)
 2. install package (`$npm i` or `$yarn install`)
 > If you wanna use yarn, you need install yarn. (`$npm i -g yarn`)
 3. edit `config.json` (copy `config.json.example` as `config.json`)
