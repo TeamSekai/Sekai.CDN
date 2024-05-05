@@ -35,3 +35,22 @@ import IconButton from "./IconButton.astro";
         margin: 0.25em;
     }
 </style>
+
+<!-- Google tag (gtag.js) -->
+<script is:inline>
+	const gtag_x = () => {
+		const gtagID = "G-R87S8Y3R51"
+		const sc = document.createElement('script');
+		sc.src = `https://www.googletagmanager.com/gtag/js?id=${gtagID}`
+		document.body.appendChild(sc)
+		// Google tag (gtag.js)
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());		
+		gtag('config', gtagID);
+	}
+	gtag_x()
+	document.addEventListener('astro:after-swap', () => {
+		gtag_x()
+	});
+</script>
