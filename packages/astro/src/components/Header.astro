@@ -40,7 +40,7 @@ import IconButton from "./IconButton.astro";
 <script is:inline>
 	const gtag_x = async () => {
 	  try {
-		const res = await fetch('./const');
+		const res = await fetch('/const');
 		if (res.status === 204) return;
 		if (!res.ok) {
 		  throw new Error('Failed to fetch');
