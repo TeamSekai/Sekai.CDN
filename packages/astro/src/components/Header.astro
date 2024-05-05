@@ -38,19 +38,31 @@ import IconButton from "./IconButton.astro";
 
 <!-- Google tag (gtag.js) -->
 <script is:inline>
-	const gtag_x = () => {
-		const gtagID = "G-R87S8Y3R51"
+	const gtag_x = async () => {
+	  try {
+		const res = await fetch('./const');
+		if (res.status === 204) return;
+		if (!res.ok) {
+		  throw new Error('Failed to fetch');
+		}
+		const data = await res.json();
+		const gtagID = data.gtagID;
+		if (!gtagID) return;
 		const sc = document.createElement('script');
-		sc.src = `https://www.googletagmanager.com/gtag/js?id=${gtagID}`
-		document.body.appendChild(sc)
+		sc.src = `https://www.googletagmanager.com/gtag/js?id=${gtagID}`;
+		document.body.appendChild(sc);
 		// Google tag (gtag.js)
 		window.dataLayer = window.dataLayer || [];
 		function gtag(){dataLayer.push(arguments);}
-		gtag('js', new Date());		
+		gtag('js', new Date());    
 		gtag('config', gtagID);
-	}
-	gtag_x()
+	  } catch (e) {
+		console.error('Something went wrong', e);
+	  }
+	};
+	gtag_x();
 	document.addEventListener('astro:after-swap', () => {
-		gtag_x()
+	  gtag_x();
 	});
-</script>
+  </script>
+  
