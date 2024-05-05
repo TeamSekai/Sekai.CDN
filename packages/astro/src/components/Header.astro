@@ -35,3 +35,34 @@ import IconButton from "./IconButton.astro";
         margin: 0.25em;
     }
 </style>
+
+<!-- Google tag (gtag.js) -->
+<script is:inline>
+	const gtag_x = async () => {
+	  try {
+		const res = await fetch('./const');
+		if (res.status === 204) return;
+		if (!res.ok) {
+		  throw new Error('Failed to fetch');
+		}
+		const data = await res.json();
+		const gtagID = data.gtagID;
+		if (!gtagID) return;
+		const sc = document.createElement('script');
+		sc.src = `https://www.googletagmanager.com/gtag/js?id=${gtagID}`;
+		document.body.appendChild(sc);
+		// Google tag (gtag.js)
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());    
+		gtag('config', gtagID);
+	  } catch (e) {
+		console.error('Something went wrong', e);
+	  }
+	};
+	gtag_x();
+	document.addEventListener('astro:after-swap', () => {
+	  gtag_x();
+	});
+  </script>
+  

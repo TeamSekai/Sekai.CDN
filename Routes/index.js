@@ -18,6 +18,17 @@ router.get('/webupload', function (req, res) {
     res.status(200).send('HELLO')
 })
 
+router.get('/const', function (req, res) {
+	console.log('Called')
+	if (config.gtagID !== '') {
+		res.status(200).json({
+			"gtagID": config.gtagID
+		})
+	} else {
+		res.status(204)
+	}
+})
+
 router.use(express.static(path.resolve(import.meta.dirname, "../", config.filesDir)));
 
 router.use("/", express.static(path.join(import.meta.dirname, "../", "packages", "astro", "dist", "client")));

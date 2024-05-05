@@ -8,6 +8,7 @@ export const config = {
     uploadUserName: "admin",
     uploadPassword: "password",
     useXffHeader: false,
+	gtagID: ""
 };
 
 Object.assign(
