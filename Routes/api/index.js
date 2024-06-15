@@ -19,10 +19,12 @@ router.use('/', fileUpload());
 router.use(async (req, res, next) => {
     if (req.method != "GET") return next();
     if (req.path.startsWith("/api/files")) return next();
-    const offset = parseInt(req.query.offset) || 0; // クエリパラメータから offset を取得する
+    const filePath = decodeURIComponent(req.path.slice("/api/files".length));
+    const offset = parseInt(req.query.offset) || 0;
     console.log(offset); //dev
     try {
-        let files = await getDirectoryEntries(decodeURIComponent(req.path).slice(1).split("/").slice(1).join("/"))
+        const fullPath = path.join(filesDir, filePath);
+        let files = await getDirectoryEntries(fullPath);
         if (offset !== 0) {
             console.log('processing')
             files = files.slice(offset, offset + 10);
