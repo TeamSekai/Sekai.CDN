@@ -32,6 +32,7 @@ router.use(async (req, res, next) => {
 		}
 		res.json(files);
 	} catch (e) {
+		console.log(e);
 		res.sendStatus(404);
 	}
 });
