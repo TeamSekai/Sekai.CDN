@@ -27,8 +27,7 @@ router.use(async (req, res, next) => {
 		let files = await getDirectoryEntries(
 			decodeURIComponent(req.path).slice(1).split('/').slice(1).join('/')
 		);
-		if (isNaN(offset)) {
-		} else {
+		if (!isNaN(offset)) {
 			files = files.slice(offset, offset + 10);
 		}
 		res.json(files);
