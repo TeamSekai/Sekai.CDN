@@ -20,6 +20,7 @@ router.use(async (req, res, next) => {
     if (req.method != "GET") return next();
     if (req.path.startsWith("/api/files")) return next();
     const offset = parseInt(req.query.offset) || 0; // クエリパラメータから offset を取得する
+    console.log(offset); //dev
     try {
         let files = await getDirectoryEntries(decodeURIComponent(req.path).slice(1).split("/").slice(1).join("/"))
         if (offset !== 0) {
