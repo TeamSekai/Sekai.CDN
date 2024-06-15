@@ -27,6 +27,7 @@ router.use(async (req, res, next) => {
 		let files = await getDirectoryEntries(
 			decodeURIComponent(req.path).slice(1).split('/').slice(1).join('/')
 		);
+		console.log(`Slice ${offset} to ${offset + 10}`)
 		if (offset) {
 			files = files.slice(offset, offset + 10);
 		}
