@@ -24,6 +24,7 @@ router.use(async (req, res, next) => {
     try {
         let files = await getDirectoryEntries(decodeURIComponent(req.path).slice(1).split("/").slice(1).join("/"))
         if (offset !== 0) {
+            console.log('processing')
             files = files.slice(offset, offset + 10);
         }
         res.json(files);
