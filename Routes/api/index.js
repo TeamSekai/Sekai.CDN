@@ -19,6 +19,7 @@ router.use('/', fileUpload());
 router.use(async (req, res, next) => {
     if (req.method != "GET") return next();
     if (req.path.startsWith("/api/files")) return next();
+    res.header("Access-Control-Allow-Origin", "*");
     try {
         res.json(await getDirectoryEntries(decodeURIComponent(req.path).slice(1).split("/").slice(1).join("/")));
     } catch (e) {
