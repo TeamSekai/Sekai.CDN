@@ -22,7 +22,7 @@ router.use(cors());
 router.use(async (req, res, next) => {
 	if (req.method != 'GET') return next();
 	if (req.path.startsWith('/api/files')) return next();
-	const offset = Number(req.query.offset) ?? 'x';
+	const offset = Number(req.query.offset);
 	try {
 		let files = await getDirectoryEntries(
 			decodeURIComponent(req.path).slice(1).split('/').slice(1).join('/')
