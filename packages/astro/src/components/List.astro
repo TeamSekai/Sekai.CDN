@@ -34,6 +34,8 @@ const { parentDir, files } = Astro.props;
 </style>
 
 <script>
+    import { uploadFiles } from "./upload.mts";
+
     function replaceURLSearchParam(key: string, value: string) {
         const params = new URLSearchParams(location.search);
         params.set(key, value);
@@ -58,4 +60,15 @@ const { parentDir, files } = Astro.props;
         listLayoutButton.addEventListener('click', () => setLayout('list'));
         gridLayoutButton.addEventListener('click', () => setLayout('grid'));
     });
+
+    const listElement = document.getElementById('list') as HTMLUListElement;
+
+    listElement.addEventListener('dragover', (event) => {
+        event.preventDefault();
+    });
+
+    listElement.addEventListener('drop', async (event) => {
+        event.preventDefault();
+        await uploadFiles(event.dataTransfer?.files);
+    })
 </script>
