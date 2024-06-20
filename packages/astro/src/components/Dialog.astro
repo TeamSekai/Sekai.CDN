@@ -1,6 +1,6 @@
 <dialog id="dialog">
     <p id="dialog-content"></p>
-    <div>
+    <div id="dialog-button-box">
         <button id="dialog-ok">OK</button>
         <button id="dialog-cancel">キャンセル</button>
     </div>
@@ -22,6 +22,29 @@
 
     #dialog::backdrop {
         backdrop-filter: blur(8px);
+    }
+
+    #dialog-button-box {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    #dialog-button-box button {
+        background-color: #c0c0c040;
+        padding: 0.5em;
+        border-radius: 0.5em;
+    }
+
+    #dialog-button-box button:hover {
+        background-color: #c0c0c0;
+    }
+
+    #dialog-ok {
+        display: block;
+    }
+
+    #dialog-cancel {
+        display: block;
     }
 
     #dialog.info #dialog-cancel {
