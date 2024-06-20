@@ -1,9 +1,11 @@
+import { dialogConfirm } from "./dialog.mts";
+
 export async function uploadFiles(files?: FileList | null): Promise<void> {
         if (files == null) {
             return;
         }
         const file = files[0];
-        if (!window.confirm(`${file.name} をアップロードしますか？`)) return;
+        if (!await dialogConfirm(`${file.name} をアップロードしますか？`)) return;
         let formData = new FormData();
         formData.append("file", file);
         let params = new URLSearchParams({

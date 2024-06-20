@@ -1,6 +1,7 @@
 ---
 import { ViewTransitions } from "astro:transitions";
 import Header from "../components/Header.astro";
+import Dialog from "../components/Dialog.astro";
 
 let bodyClass = Astro.url.searchParams.get('layout') == 'grid' ? 'grid-layout' : null;
 ---
@@ -23,6 +24,7 @@ let bodyClass = Astro.url.searchParams.get('layout') == 'grid' ? 'grid-layout' :
             <div id="list-wrapper">
                 <slot />
             </div>
+            <Dialog>test</Dialog>
         </div>
     </body>
 
@@ -48,6 +50,7 @@ let bodyClass = Astro.url.searchParams.get('layout') == 'grid' ? 'grid-layout' :
 <style>
     #body-wrapper {
         --body-padding-width: 8px;
+        position: relative;
         display: flex;
         flex-flow: column nowrap;
         height: calc(100% - 2 * var(--body-padding-width));
