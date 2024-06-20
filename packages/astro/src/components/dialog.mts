@@ -24,13 +24,13 @@ function promise(): Promise<boolean> {
     });
 }
 
-export function dialogConfirm(content: string): Promise<boolean> {
+export function confirm(content: string): Promise<boolean> {
     dialog.classList.remove('info');
     prepare(content);
     return promise();
 }
 
-export async function dialogInfo(content: string): Promise<void> {
+export async function info(content: string): Promise<void> {
     dialog.classList.add('info');
     prepare(content);
     await promise();

@@ -1,11 +1,11 @@
-import { dialogConfirm, dialogInfo } from "./dialog.mts";
+import * as dialog from "./dialog.mts";
 
 export async function uploadFiles(files?: FileList | null): Promise<void> {
         if (files == null) {
             return;
         }
         const file = files[0];
-        if (!await dialogConfirm(`${file.name} をアップロードしますか？`)) return;
+        if (!await dialog.confirm(`${file.name} をアップロードしますか？`)) return;
         let formData = new FormData();
         formData.append("file", file);
         let params = new URLSearchParams({
@@ -17,11 +17,11 @@ export async function uploadFiles(files?: FileList | null): Promise<void> {
         });
         if (res.status == 200) {
             let json = await res.json();
-            await dialogInfo(`アップロードしました: ${json.fileName}`);
+            await dialog.info(`アップロードしました: ${json.fileName}`);
             return location.reload();
         }
         else if (res.status == 401)
-            return await dialogInfo("ログインに失敗しました");
+            return await dialog.info("ログインに失敗しました");
         else
-            return await dialogInfo(`不明なエラー: ${res.status} ${res.statusText}`);
+            return await dialog.info(`不明なエラー: ${res.status} ${res.statusText}`);
 }
