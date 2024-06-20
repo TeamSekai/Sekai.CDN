@@ -1,4 +1,4 @@
-import { dialogConfirm } from "./dialog.mts";
+import { dialogConfirm, dialogInfo } from "./dialog.mts";
 
 export async function uploadFiles(files?: FileList | null): Promise<void> {
         if (files == null) {
@@ -17,11 +17,11 @@ export async function uploadFiles(files?: FileList | null): Promise<void> {
         });
         if (res.status == 200) {
             let json = await res.json();
-            alert(`アップロードしました: ${json.fileName}`);
+            await dialogInfo(`アップロードしました: ${json.fileName}`);
             return location.reload();
         }
         else if (res.status == 401)
-            return alert("ログインに失敗しました");
+            return await dialogInfo("ログインに失敗しました");
         else
-            return alert(`不明なエラー: ${res.status} ${res.statusText}`);
+            return await dialogInfo(`不明なエラー: ${res.status} ${res.statusText}`);
 }

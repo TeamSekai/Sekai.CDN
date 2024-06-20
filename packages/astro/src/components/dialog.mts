@@ -10,15 +10,30 @@ interface Resolvers {
 
 let resolvers: Resolvers | null = null;
 
-export function dialogConfirm(content: string): Promise<boolean> {
-    dialogContent.innerText = content;
-    dialog.showModal();
+function prepare(content: string): void {
     if (resolvers != null) {
         resolvers.reject(new Error('Another dialog has been opened'));
     }
+    dialogContent.innerText = content;
+    dialog.showModal();
+}
+
+function promise(): Promise<boolean> {
     return new Promise((resolve, reject) => {
         resolvers = { resolve, reject };
     });
+}
+
+export function dialogConfirm(content: string): Promise<boolean> {
+    dialog.classList.remove('info');
+    prepare(content);
+    return promise();
+}
+
+export async function dialogInfo(content: string): Promise<void> {
+    dialog.classList.add('info');
+    prepare(content);
+    await promise();
 }
 
 function close(value: boolean) {
