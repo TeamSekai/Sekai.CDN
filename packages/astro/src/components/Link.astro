@@ -6,11 +6,11 @@ interface Props {
 
 const { path, emphasized } = Astro.props;
 const href = '/' + path.join('/');
-const basename = path.length > 0 ? path.at(-1) : '/';
+const basename = path.length > 0 ? path.at(-1) : '';
 ---
 
 <a href={href}>
-    <p class={emphasized ? "emphasized" : ""}>{basename}</p>
+    <p class={emphasized ? "emphasized" : ""}>{basename}/</p>
 </a>
 
 <style>
