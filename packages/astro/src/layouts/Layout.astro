@@ -3,7 +3,12 @@ import { ViewTransitions } from "astro:transitions";
 import Header from "../components/Header.astro";
 import Dialog from "../components/Dialog.astro";
 
+interface Props {
+    path: string[];
+}
+
 let bodyClass = Astro.url.searchParams.get('layout') == 'grid' ? 'grid-layout' : null;
+const { path } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -19,7 +24,7 @@ let bodyClass = Astro.url.searchParams.get('layout') == 'grid' ? 'grid-layout' :
     <body class={bodyClass}>
         <div id="body-wrapper">
             <div id="header-wrapper">
-                <Header />
+                <Header path={path} />
             </div>
             <div id="list-wrapper">
                 <slot />
