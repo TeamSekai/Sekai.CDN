@@ -1,0 +1,33 @@
+---
+interface Props {
+    path: string[];
+    emphasized?: boolean;
+}
+
+const { path, emphasized } = Astro.props;
+const href = '/' + path.join('/');
+const basename = path.length > 0 ? path.at(-1) : '';
+---
+
+<a href={href}>
+    <p class={emphasized ? "emphasized" : ""}>{basename}/</p>
+</a>
+
+<style>
+    a {
+        color: black;
+        text-decoration: none;
+    }
+
+    p {
+        background-color: #c0c0c080;
+        width: fit-content;
+        padding: 0.5em;
+        border-radius: 0.5em;
+        margin-right: 2px;
+    }
+
+    p.emphasized, p:hover {
+        background-color: #c0c0c0;
+    }
+</style>

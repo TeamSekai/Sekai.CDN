@@ -7,10 +7,10 @@ import NotFound from "../components/NotFound.astro";
 const dirPath: string = Astro.params.path ?? '';
 let files: DirectoryEntry[] | null = null;
 let parentDir: string | null = null;
+const pathDirs = dirPath.split("/").filter((dirname) => dirname != "");
 
 try {
     files = await getDirectoryEntries(dirPath);
-    const pathDirs = dirPath.split("/");
     const length = pathDirs.length;
     if (length > 0 && pathDirs[0].length > 0) {
         parentDir = "/" + pathDirs.slice(0, length - 1).join("/");
@@ -24,6 +24,6 @@ if (files == null) {
 }
 ---
 
-<Layout>
+<Layout path={pathDirs}>
     {files != null ? <List parentDir={parentDir} files={files} /> : <NotFound />}
 </Layout>

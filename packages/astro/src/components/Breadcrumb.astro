@@ -1,0 +1,28 @@
+---
+import Link from "./Link.astro";
+
+interface Props {
+    path: string[];
+}
+
+const { path } = Astro.props;
+
+const breadcrumb = [];
+const pathLength = path.length;
+for (let i = 0 ; i <= pathLength ; i++) {
+    breadcrumb.push(path.slice(0, i));
+}
+---
+
+<div class="breadcrumb">
+    {breadcrumb.map(
+        (path, i) =>
+            <Link path={path} emphasized={i == breadcrumb.length - 1}/>
+    )}
+</div>
+
+<style>
+    .breadcrumb {
+        display: flex;
+    }
+</style>
